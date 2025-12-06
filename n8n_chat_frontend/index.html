@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assistant IA pour n8n</title>
+  <!-- On charge la feuille de style principale -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Fenêtre modale pour renseigner l’URL de n8n lors de la première utilisation -->
+  <div id="settings-modal" class="modal hidden">
+    <div class="modal-content">
+      <h2>Configurer n8n</h2>
+      <p>Entrez l’URL de votre instance n8n (ex : http://localhost:5678) :</p>
+      <input type="text" id="n8n-url-input" placeholder="http://localhost:5678">
+      <p>Chemin de votre webhook (ex : /webhook/chat) :</p>
+      <input type="text" id="webhook-path-input" placeholder="/webhook/ai-agent">
+      <button id="save-settings">Enregistrer</button>
+    </div>
+  </div>
+
+  <!-- En-tête -->
+  <header>
+    <h1>Agent IA connecté à n8n</h1>
+    <div id="n8n-status">Instance n8n : <span id="n8n-url-display">Non configurée</span></div>
+    <button id="edit-settings" class="link-button">Modifier l’URL n8n</button>
+  </header>
+
+  <!-- Conteneur principal -->
+  <div class="main-container">
+    <!-- Zone de chat -->
+    <section id="chat-section">
+      <div id="chat-window">
+        <!-- Les messages seront injectés ici dynamiquement -->
+      </div>
+      <div id="input-area">
+        <textarea id="user-input" placeholder="Envoyer un message…" rows="2"></textarea>
+        <div class="input-actions">
+          <label for="file-input" class="file-label">📎 Ajouter des fichiers</label>
+          <input type="file" id="file-input" multiple class="hidden">
+          <button id="send-button">Envoyer</button>
+        </div>
+      </div>
+    </section>
+    <!-- Zone de visualisation des workflows n8n -->
+    <aside id="workflow-section">
+      <h2>Workflows n8n</h2>
+      <p>Cette section affiche la liste des workflows et leurs états après chaque action.</p>
+      <div id="workflow-list">
+        <!-- Les workflows seront affichés ici -->
+      </div>
+    </aside>
+  </div>
+
+  <!-- Script principal -->
+  <script src="script.js"></script>
+</body>
+</html>

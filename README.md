@@ -96,3 +96,6 @@ Happy automating!
 [\[3\]](https://docs.n8n.io/integrations/builtin/cluster-nodes/sub-nodes/n8n-nodes-langchain.lmchatopenrouter/#:~:text=Model) [\[4\]](https://docs.n8n.io/integrations/builtin/cluster-nodes/sub-nodes/n8n-nodes-langchain.lmchatopenrouter/#:~:text=Frequency%20Penalty) [\[5\]](https://docs.n8n.io/integrations/builtin/cluster-nodes/sub-nodes/n8n-nodes-langchain.lmchatopenrouter/#:~:text=Sampling%20Temperature) [\[6\]](https://docs.n8n.io/integrations/builtin/cluster-nodes/sub-nodes/n8n-nodes-langchain.lmchatopenrouter/#:~:text=Response%20Format) [\[7\]](https://docs.n8n.io/integrations/builtin/cluster-nodes/sub-nodes/n8n-nodes-langchain.lmchatopenrouter/#:~:text=Presence%20Penalty) [\[8\]](https://docs.n8n.io/integrations/builtin/cluster-nodes/sub-nodes/n8n-nodes-langchain.lmchatopenrouter/#:~:text=Timeout) OpenRouter Chat Model node documentation | n8n Docs 
 
 <https://docs.n8n.io/integrations/builtin/cluster-nodes/sub-nodes/n8n-nodes-langchain.lmchatopenrouter/>
+
+Github : https://github.com/Lynnaana/n8n
+Video Demo : https://drive.google.com/drive/folders/1K1prSvmFuAE5EHqZ42Kx4hyiKY0IeCAi?usp=drive_link

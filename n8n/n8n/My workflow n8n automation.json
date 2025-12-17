@@ -1,0 +1,2940 @@
+{
+  "name": "My workflow n8n automation",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "options": {
+          "responseMode": "responseNodes"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -1568,
+        368
+      ],
+      "id": "27de5363-098f-4365-9384-396e390dbdcd",
+      "name": "When chat message received",
+      "webhookId": "7886eee4-05b5-470a-a00a-c74ff57808df",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput }}",
+        "options": {
+          "systemMessage": "=Vous êtes un agent de classification. Votre rôle est d’examiner le message de l’utilisateur et de déterminer laquelle des catégories suivantes correspond le mieux à son intention :\n\nguide → lorsque l’utilisateur cherche de l’aide, des explications, ou des conseils sur l’utilisation de n8n.\n\ncreate → lorsque l’utilisateur souhaite créer un nouveau workflow n8n.\n\nmodify → lorsqu’il veut modifier, améliorer ou adapter un workflow existant.\n\ndelete → lorsqu’il veut supprimer un workflow ou une partie d’un workflow.\n\nPour les trois catégories liées à la manipulation de workflows (create, modify, delete), considérez que l’intention de l’utilisateur fait partie d’un groupe appelé “workflow system”, défini comme : toutes les actions où l’utilisateur cherche à construire, transformer ou retirer des éléments structurants d’un workflow n8n, y compris la description des blocs, la logique de flux, les exigences fonctionnelles, et les modifications à appliquer.\nCe paragraphe sert uniquement à guider votre raisonnement et ne doit jamais être renvoyé.\n\nRépondez toujours uniquement par l’un des mots suivants :\nguide — create — modify — delete\n\nAucun autre texte n’est autorisé."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -1168,
+        432
+      ],
+      "id": "85a342ca-e92e-4c18-a579-db83fe88ff3e",
+      "name": "mission classifier",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "model": "meta-llama/llama-4-maverick",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        -400,
+        288
+      ],
+      "id": "e485d8ca-b911-47a0-a681-19956504d52c",
+      "name": "OpenRouter Chat Model2",
+      "credentials": {
+        "openRouterApi": {
+          "id": "bxqfUURgxrbf9ST0",
+          "name": "OpenRouter account 2"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Vous êtes un agent spécialisé dans l'assistance n8n. Votre rôle est d'aider l'utilisateur à comprendre et à utiliser n8n efficacement qui repond dans la meme langue l'utilisateur. Donnez des conseils étape par étape, des explications claires et des références à la documentation officielle si nécessaire. Utilisez les outils disponibles (par exemple HTTP Request pour interroger les docs) lorsque cela est utile. Aide moi moi à faire ça:\n {{ $('When chat message received').item.json.chatInput }}\nsi la demande ne concerne pas n8n dit que tu n'as pa été programmé pour ça.",
+        "options": {
+          "systemMessage": "Vous êtes un assistant expert de n8n qui fournit des explications détaillées."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -400,
+        128
+      ],
+      "id": "1dda5fa5-1319-4639-8126-30dedcbd6b41",
+      "name": "Guide Agent1",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "message": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chat",
+      "typeVersion": 1,
+      "position": [
+        192,
+        128
+      ],
+      "id": "46b9fbb1-da52-47a8-8cac-2e421e40b75f",
+      "name": "Respond to Chat guide",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "model": "meta-llama/llama-4-maverick",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        -1168,
+        576
+      ],
+      "id": "15e4f8ab-f85a-4685-af13-205e27686684",
+      "name": "OpenRouter Chat Model for classification",
+      "credentials": {
+        "openRouterApi": {
+          "id": "fStlHR6sBoj8t5Vm",
+          "name": "OpenRouter account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "model": "meta-llama/llama-4-maverick",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        -128,
+        544
+      ],
+      "id": "5cf2d3b5-e4bb-44dd-abd0-5735c0917137",
+      "name": "OpenRouter Chat Model workflow",
+      "credentials": {
+        "openRouterApi": {
+          "id": "bxqfUURgxrbf9ST0",
+          "name": "OpenRouter account 2"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "model": "meta-llama/llama-4-maverick",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        144,
+        544
+      ],
+      "id": "b5bcef14-32c7-4023-8c91-a222883a6bd9",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "bxqfUURgxrbf9ST0",
+          "name": "OpenRouter account 2"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\n/**\n * Utils\n */\nfunction slugify(name) {\n  return name.toLowerCase().replace(/[^a-z0-9]+/g, '-');\n}\n\n// Nettoyage du texte de l'IA pour enlever les ```json``` & co\nfunction extractJson(raw) {\n  if (!raw || typeof raw !== 'string') return raw;\n  let txt = raw.trim();\n\n  if (txt.startsWith('```')) {\n    txt = txt.replace(/^```[a-zA-Z]*\\n?/, '').replace(/```$/, '').trim();\n  }\n\n  const firstBrace = txt.indexOf('{');\n  const lastBrace = txt.lastIndexOf('}');\n  if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {\n    txt = txt.slice(firstBrace, lastBrace + 1);\n  }\n\n  return txt;\n}\n\n// Map d'alias -> nodeType complet\nfunction resolveNodeType(nodeType) {\n  if (!nodeType) return 'n8n-nodes-base.noOp';\n  if (nodeType.startsWith('n8n-nodes-')) return nodeType;\n  // alias simple\n  return `n8n-nodes-base.${nodeType}`;\n}\n\n// Builder générique depuis nodes + connections\nfunction buildFromNodes(plan) {\n  const workflowName = plan.name || 'Generated workflow';\n\n  const nodes = [];\n  const idToName = {};\n  const connections = {};\n\n  const nodePlans = plan.nodes || [];\n\n  nodePlans.forEach((step, index) => {\n    const name = step.label || step.id || step.nodeType || `Node_${index + 1}`;\n    const type = resolveNodeType(step.nodeType);\n    const typeVersion = step.typeVersion ?? 1;\n    const pos = step.position || {};\n    const x = pos.x ?? (260 + index * 260);\n    const y = pos.y ?? 300;\n\n    const node = {\n      name,\n      type,\n      typeVersion,\n      position: [x, y],\n      parameters: step.params || {},\n    };\n\n    nodes.push(node);\n    idToName[step.id || name] = name;\n  });\n\n  // Construire l'objet connections\n  (plan.connections || []).forEach((conn) => {\n    const fromName = idToName[conn.from];\n    const toName = idToName[conn.to];\n    if (!fromName || !toName) return;\n\n    const outIndex = conn.outputIndex ?? 0;\n    const inIndex = conn.inputIndex ?? 0;\n\n    if (!connections[fromName]) {\n      connections[fromName] = { main: [] };\n    }\n    while (connections[fromName].main.length <= outIndex) {\n      connections[fromName].main.push([]);\n    }\n\n    connections[fromName].main[outIndex].push({\n      node: toName,\n      type: 'main',\n      index: inIndex,\n    });\n  });\n\n  return {\n    name: workflowName,\n    nodes,\n    connections,\n    settings: {},\n  };\n}\n\n// Fallback : si l'IA donne seulement \"steps\" (workflow linéaire)\nfunction buildFromSteps(plan) {\n  const steps = plan.steps || [];\n  const nodesPlan = steps.map((s, i) => ({\n    id: s.id || `step_${i + 1}`,\n    nodeType: s.type,\n    params: s.params,\n  }));\n\n  const connectionsPlan = [];\n  for (let i = 0; i < nodesPlan.length - 1; i++) {\n    connectionsPlan.push({\n      from: nodesPlan[i].id,\n      to: nodesPlan[i + 1].id,\n      outputIndex: 0,\n      inputIndex: 0,\n    });\n  }\n\n  return buildFromNodes({\n    name: plan.name,\n    nodes: nodesPlan,\n    connections: connectionsPlan,\n  });\n}\n\n// Main\nreturn items.map((item) => {\n  const raw = item.json.output;\n  const cleaned = extractJson(raw);\n\n  let data;\n  try {\n    data = JSON.parse(cleaned);\n  } catch (e) {\n    data = {\n      mode: 'chat',\n      reply: raw,\n    };\n  }\n\n  if (data.mode === 'create_workflow' && data.workflowPlan) {\n    const plan = data.workflowPlan;\n\n    let workflow;\n    if (plan.nodes && plan.connections) {\n      workflow = buildFromNodes(plan);\n    } else if (plan.steps) {\n      workflow = buildFromSteps(plan);\n    }\n\n    if (workflow) {\n      data.workflow = workflow;\n    }\n  }\n\n  return { json: data };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        512,
+        432
+      ],
+      "id": "2c1bf543-3997-4d3d-985a-13e36be9acce",
+      "name": "Parse LLM JSON1",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:5678/api/v1/workflows",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-N8N-API-KEY",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0ZmZiYzM2My03OGNhLTQ5MGUtYTA4Ny03YTMxODM4ZTE2MzciLCJpc3MiOiJuOG4iLCJhdWQiOiJwdWJsaWMtYXBpIiwiaWF0IjoxNzY1MTA3MzcyfQ.A8vSro068RX1kPvfw-hileulw7TxOKONxDEew8rMGAs"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "name",
+              "value": "={{ $json.workflow.name }}"
+            },
+            {
+              "name": "nodes",
+              "value": "={{ $json.workflow.nodes }}"
+            },
+            {
+              "name": "connections",
+              "value": "={{ $json.workflow.connections }}"
+            },
+            {
+              "name": "settings",
+              "value": "={{ $json.workflow.settings ?? {} }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        688,
+        432
+      ],
+      "id": "8deab3a7-9b94-4e5f-96fc-a2c588e866bf",
+      "name": "Create Workflow via API1",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "message": "={{ \"Workflow créé avec l'id : \" + $json.id }} ",
+        "waitUserReply": false,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chat",
+      "typeVersion": 1,
+      "position": [
+        976,
+        432
+      ],
+      "id": "7137527a-8f90-44ff-8eb4-758f2551f303",
+      "name": "Respond to Chat1",
+      "alwaysOutputData": false,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.output }}",
+                    "rightValue": "guide",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "c84c8671-0445-499f-be25-cb01d5668fda"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "3a14463f-8f20-4346-9c4f-ffd28b218b6b",
+                    "leftValue": "={{ $json.output }}",
+                    "rightValue": "create",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "1741483d-9a07-4de2-ad20-f1a866bbc844",
+                    "leftValue": "={{ $json.output }}",
+                    "rightValue": "modify",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "4823a82b-24c7-4f6b-ba37-70e6e4c5d23b",
+                    "leftValue": "={{ $json.output }}",
+                    "rightValue": "delete",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        -832,
+        576
+      ],
+      "id": "513726d3-f610-4e57-8abd-13a5f4d7eeef",
+      "name": "Switch",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('When chat message received').item.json.chatInput }}",
+        "options": {
+          "systemMessage": "=Tu es un assistant Prompt Engineer spécialisé en ingénierie système et en conception de workflows n8n.\nTa mission est de répondre à un questionnaire interne, puis de fusionner toutes tes réponses pour produire UNE reformulation technique complète, décrivant précisément comment construire le workflow n8n demandé par l’utilisateur.\n\nLa demande utilisateur se trouve ici :\n{{ $('When chat message received').item.json.action }}\n\nTu dois répondre à chaque question du questionnaire suivant, puis combiner toutes les réponses en un seul texte final, extrêmement détaillé, sans jamais inventer de besoins non exprimés.\n\n🔎 QUESTIONNAIRE INTERNE (TU DOIS Y RÉPONDRE POINT PAR POINT)\n1️⃣ Quel est le besoin réel exprimé par l’utilisateur ?\n\nAnalyse en une phrase claire ce que l’utilisateur veut réellement obtenir.\n\n2️⃣ Quels sont les objectifs du workflow ?\n\nListe précise et exhaustive des objectifs fonctionnels attendus.\n\n3️⃣ Quelles sont les entrées du workflow ?\n\nÉvénements, triggers, données reçues, contexte, etc.\n\n4️⃣ Quelles sont les sorties du workflow ?\n\nActions finales, données envoyées, opérations effectuées.\n\n5️⃣ Quels nœuds n8n sont nécessaires pour réaliser ce workflow ?\n\nPour chaque nœud, tu dois préciser :\n\nson type exact (ex : n8n-nodes-base.httpRequest)\n\nson rôle,\n\nsa configuration essentielle (paramètres importants)\n\npourquoi il est requis.\n\n6️⃣ Quelles sont les connexions exactes entre les nœuds ?\n\nPour chaque lien, préciser :\n\nnœud source → nœud cible\n\noutputIndex\n\ninputIndex\n\njustification du flux logique.\n\n7️⃣ Quel est le flux logique complet du workflow ?\n\nDécris l’enchaînement étape par étape depuis le trigger jusqu’à la dernière action.\n\n🧩 INSTRUCTION FINALE\n\nAprès avoir répondu au questionnaire, tu dois combiner toutes les réponses pour produire une reformulation technique finale, au format texte, contenant :\n\nune explication synthétique mais détaillée du workflow,\n\nla liste complète des nœuds nécessaires,\n\nla configuration essentielle de chaque nœud,\n\nles connexions entre les nœuds,\n\nle flux logique global.\n\nAucun JSON. Aucun Markdown. Aucun code.\n\nTu dois produire un texte fluide et technique du type :\n\n“Pour réaliser ce workflow, il faut utiliser un nœud Cron configuré comme suit…, puis un nœud HTTP Request configuré pour…, puis connecter X à Y via… etc.”\n\n⚠️ RÈGLES STRICTES\n\nNe JAMAIS inventer de besoins.\n\nTu peux approfondir ou rendre explicite ce que l’utilisateur sous-entend.\n\nTu dois être extrêmement précis, systémique et technique.\n\nTu dois rester 100% généraliste, capable de reformuler tout type de workflow, simple ou complexe."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -128,
+        368
+      ],
+      "id": "ad64c3ca-9d54-422d-8c48-310ab5925e52",
+      "name": "workflow conceptor",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.output }}",
+        "options": {
+          "systemMessage": "=Tu es un assistant pour construire des workflows n8n à partir de la demande utilisateur:\n {{ $json.output }}\n\nTu DOIS TOUJOURS répondre avec un seul objet JSON et rien d'autre (pas de Markdown, pas de ```).\n\nFormat général :\n\n{\n  \"mode\": \"chat\" | \"create_workflow\",\n  \"reply\": \"string\",\n  \"workflowPlan\"?: {\n    \"name\": \"string\",\n    \"nodes\"?: [\n      {\n        \"id\": \"string\",\n        \"label\"?: \"string\",\n        \"nodeType\": \"string\",          // ex: \"webhook\", \"httpRequest\", \"if\", \"set\",\n                                       // ou \"n8n-nodes-base.webhook\"\n        \"typeVersion\"?: number,\n        \"params\"?: { ... },            // ira dans node.parameters\n        \"position\"?: { \"x\": number, \"y\": number }\n      }\n    ],\n    \"connections\"?: [\n      {\n        \"from\": \"string\",              // id du node source\n        \"to\": \"string\",                // id du node cible\n        \"outputIndex\"?: number,        // sortie de \"from\" (default 0)\n        \"inputIndex\"?: number          // entrée de \"to\" (default 0)\n      }\n    ],\n\n    // format simplifié linéaire (facultatif, pour les workflows simples) :\n    \"steps\"?: [\n      {\n        \"id\": \"string\",\n        \"type\": \"webhook\" | \"httpRequest\" | \"respondText\" | \"set\" | \"if\" | ...,\n        \"params\"?: { ... }\n      }\n    ]\n  }\n}\n\nRègles :\n- Si l'utilisateur discute -> \"mode\": \"chat\", mets une réponse dans \"reply\".\n- Si l'utilisateur demande un workflow :\n  - \"mode\": \"create_workflow\"\n  - décris le workflow dans \"workflowPlan\".\n  - Si le workflow est simple et linéaire, tu peux utiliser \"steps\".\n  - Pour des workflows plus avancés (if, branches, etc.), utilise \"nodes\" + \"connections\".\n- Pas de Markdown, pas de ```json```, pas de texte en dehors de l'objet JSON.\n\n\nIMPORTANT :\n- Ne JAMAIS utiliser de Markdown, ni de ``` ``` autour de ta réponse.\n- Ne JAMAIS ajouter de texte avant ou après l'objet JSON.\n- Ne pas renvoyer plusieurs objets JSON, mais UN SEUL.\n- La réponse finale doit être STRICTEMENT du JSON brut.\n",
+          "enableStreaming": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        144,
+        368
+      ],
+      "id": "72d69e9e-662e-4f30-b65f-e9342e6161eb",
+      "name": "developeur agent",
+      "notesInFlow": false,
+      "alwaysOutputData": false,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "DELETE",
+        "url": "=http://localhost:5678/api/v1/workflows/{{ $json.reply }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-N8N-API-KEY",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0ZmZiYzM2My03OGNhLTQ5MGUtYTA4Ny03YTMxODM4ZTE2MzciLCJpc3MiOiJuOG4iLCJhdWQiOiJwdWJsaWMtYXBpIiwiaWF0IjoxNzY1MTA3MzcyfQ.A8vSro068RX1kPvfw-hileulw7TxOKONxDEew8rMGAs"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        272,
+        1200
+      ],
+      "id": "d03003d8-8010-474b-90c7-4078039d934b",
+      "name": "HTTP Request",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "message": "Delete Workflow via API",
+        "waitUserReply": false,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chat",
+      "typeVersion": 1,
+      "position": [
+        512,
+        1200
+      ],
+      "id": "31d261a8-a374-422e-bb69-6f6ecacda03e",
+      "name": "Delete Workflow via API",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "model": "meta-llama/llama-4-maverick",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        -368,
+        1344
+      ],
+      "id": "bdc296b3-5ae0-4699-ad02-36bbc37b4059",
+      "name": "OpenRouter Chat Model4",
+      "credentials": {
+        "openRouterApi": {
+          "id": "bxqfUURgxrbf9ST0",
+          "name": "OpenRouter account 2"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Vous êtes un agent spécialisé dans la suppresion de workflow",
+        "options": {
+          "systemMessage": "=Vous êtes un agent spécialisé dans la suppresion de workflow depuis le message identifie le id du workflow {{ $('When chat message received').item.json.chatInput }}\n\nen output veux uniquement le ID du workflow et rien d'autre sans espace sans rien"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -368,
+        1184
+      ],
+      "id": "9b235adc-3d3c-4e2b-b997-72e46a7ff59f",
+      "name": "delete agent",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\n/**\n * Utils\n */\nfunction slugify(name) {\n  return name.toLowerCase().replace(/[^a-z0-9]+/g, '-');\n}\n\n// Nettoyage du texte de l'IA pour enlever les ```json``` & co\nfunction extractJson(raw) {\n  if (!raw || typeof raw !== 'string') return raw;\n  let txt = raw.trim();\n\n  if (txt.startsWith('```')) {\n    txt = txt.replace(/^```[a-zA-Z]*\\n?/, '').replace(/```$/, '').trim();\n  }\n\n  const firstBrace = txt.indexOf('{');\n  const lastBrace = txt.lastIndexOf('}');\n  if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {\n    txt = txt.slice(firstBrace, lastBrace + 1);\n  }\n\n  return txt;\n}\n\n// Map d'alias -> nodeType complet\nfunction resolveNodeType(nodeType) {\n  if (!nodeType) return 'n8n-nodes-base.noOp';\n  if (nodeType.startsWith('n8n-nodes-')) return nodeType;\n  // alias simple\n  return `n8n-nodes-base.${nodeType}`;\n}\n\n// Builder générique depuis nodes + connections\nfunction buildFromNodes(plan) {\n  const workflowName = plan.name || 'Generated workflow';\n\n  const nodes = [];\n  const idToName = {};\n  const connections = {};\n\n  const nodePlans = plan.nodes || [];\n\n  nodePlans.forEach((step, index) => {\n    const name = step.label || step.id || step.nodeType || `Node_${index + 1}`;\n    const type = resolveNodeType(step.nodeType);\n    const typeVersion = step.typeVersion ?? 1;\n    const pos = step.position || {};\n    const x = pos.x ?? (260 + index * 260);\n    const y = pos.y ?? 300;\n\n    const node = {\n      name,\n      type,\n      typeVersion,\n      position: [x, y],\n      parameters: step.params || {},\n    };\n\n    nodes.push(node);\n    idToName[step.id || name] = name;\n  });\n\n  // Construire l'objet connections\n  (plan.connections || []).forEach((conn) => {\n    const fromName = idToName[conn.from];\n    const toName = idToName[conn.to];\n    if (!fromName || !toName) return;\n\n    const outIndex = conn.outputIndex ?? 0;\n    const inIndex = conn.inputIndex ?? 0;\n\n    if (!connections[fromName]) {\n      connections[fromName] = { main: [] };\n    }\n    while (connections[fromName].main.length <= outIndex) {\n      connections[fromName].main.push([]);\n    }\n\n    connections[fromName].main[outIndex].push({\n      node: toName,\n      type: 'main',\n      index: inIndex,\n    });\n  });\n\n  return {\n    name: workflowName,\n    nodes,\n    connections,\n    settings: {},\n  };\n}\n\n// Fallback : si l'IA donne seulement \"steps\" (workflow linéaire)\nfunction buildFromSteps(plan) {\n  const steps = plan.steps || [];\n  const nodesPlan = steps.map((s, i) => ({\n    id: s.id || `step_${i + 1}`,\n    nodeType: s.type,\n    params: s.params,\n  }));\n\n  const connectionsPlan = [];\n  for (let i = 0; i < nodesPlan.length - 1; i++) {\n    connectionsPlan.push({\n      from: nodesPlan[i].id,\n      to: nodesPlan[i + 1].id,\n      outputIndex: 0,\n      inputIndex: 0,\n    });\n  }\n\n  return buildFromNodes({\n    name: plan.name,\n    nodes: nodesPlan,\n    connections: connectionsPlan,\n  });\n}\n\n// Main\nreturn items.map((item) => {\n  const raw = item.json.output;\n  const cleaned = extractJson(raw);\n\n  let data;\n  try {\n    data = JSON.parse(cleaned);\n  } catch (e) {\n    data = {\n      mode: 'chat',\n      reply: raw,\n    };\n  }\n\n  if (data.mode === 'create_workflow' && data.workflowPlan) {\n    const plan = data.workflowPlan;\n\n    let workflow;\n    if (plan.nodes) {\n  // Même s'il n'y a pas de connections, buildFromNodes gère plan.connections || []\n  workflow = buildFromNodes(plan);\n} else if (plan.steps) {\n  workflow = buildFromSteps(plan);\n}\n\n    if (workflow) {\n      data.workflow = workflow;\n    }\n  }\n\n  return { json: data };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        0,
+        1200
+      ],
+      "id": "e02b1c62-3402-48ca-8e88-827c19744633",
+      "name": "Parse LLM JSON3",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "model": "meta-llama/llama-4-maverick",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        -416,
+        928
+      ],
+      "id": "3ec41284-45bd-4288-9988-3f31efe1e953",
+      "name": "OpenRouter Chat Model5",
+      "credentials": {
+        "openRouterApi": {
+          "id": "bxqfUURgxrbf9ST0",
+          "name": "OpenRouter account 2"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=http://localhost:5678/api/v1/workflows/{{ $json.workflowId }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-N8N-API-KEY",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0ZmZiYzM2My03OGNhLTQ5MGUtYTA4Ny03YTMxODM4ZTE2MzciLCJpc3MiOiJuOG4iLCJhdWQiOiJwdWJsaWMtYXBpIiwiaWF0IjoxNzY1MTA3MzcyfQ.A8vSro068RX1kPvfw-hileulw7TxOKONxDEew8rMGAs"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{$json[\"workflow\"]}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        880,
+        784
+      ],
+      "id": "9ae8ddd1-3580-45ea-94fa-f38a8aa2290c",
+      "name": "Update Workflow1",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "message": "={{ \"Workflow  avec l'id : \" + $json.id + \" a été modifié\"}} ",
+        "waitUserReply": false,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chat",
+      "typeVersion": 1,
+      "position": [
+        1088,
+        784
+      ],
+      "id": "98515ffc-32e4-480d-98c3-5277d60103ab",
+      "name": "Respond to Chat (update)1",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "Vous êtes un agent spécialisé dans la modification de workflow",
+        "options": {
+          "systemMessage": "=Vous êtes un agent spécialisé dans la modification de workflow depuis le message identifie le id du workflow \n\"\"{{ $('When chat message received').item.json.chatInput }}\"\"\n\nen output veux uniquement le ID du workflow et rien d'autre sans espace sans rien ",
+          "enableStreaming": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -448,
+        768
+      ],
+      "id": "720ec5df-3132-4cd1-aa5a-ada8c3fed1b1",
+      "name": "update agent",
+      "notesInFlow": false,
+      "alwaysOutputData": false,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.output }}",
+        "options": {
+          "systemMessage": "Tu es un assistant pour construire et modifier des workflows n8n.\n\nTu DOIS TOUJOURS répondre avec un seul objet JSON et rien d'autre (pas de Markdown, pas de ```).\n\nFormat général :\n\n{\n  \"mode\": \"chat\" | \"create_workflow\" | \"update_workflow\" | \"delete_workflow\",\n  \"reply\": \"string\",\n\n  // Décrit un nouveau workflow à créer OU la nouvelle version d'un workflow (create/update)\n  \"workflowPlan\"?: {\n    \"name\": \"string\",\n\n    \"nodes\"?: [\n      {\n        \"id\": \"string\",\n        \"label\"?: \"string\",\n        \"nodeType\": \"string\",          // ex: \"webhook\", \"httpRequest\", \"if\", \"set\",\n                                       // ou \"n8n-nodes-base.webhook\"\n        \"typeVersion\"?: number,\n        \"params\"?: { ... },            // ira dans node.parameters\n        \"position\"?: { \"x\": number, \"y\": number }\n      }\n    ],\n\n    \"connections\"?: [\n      {\n        \"from\": \"string\",              // id du node source\n        \"to\": \"string\",                // id du node cible\n        \"outputIndex\"?: number,        // sortie de \"from\" (default 0)\n        \"inputIndex\"?: number          // entrée de \"to\" (default 0)\n      }\n    ],\n\n    // format simplifié linéaire (facultatif, pour les workflows simples) :\n    \"steps\"?: [\n      {\n        \"id\": \"string\",\n        \"type\": \"webhook\" | \"httpRequest\" | \"respondText\" | \"set\" | \"if\" | ...,\n        \"params\"?: { ... }\n      }\n    ]\n  },\n\n  // Utilisé quand l'utilisateur veut SUPPRIMER ou MODIFIER un workflow existant\n  // (mode = \"delete_workflow\" ou \"update_workflow\")\n  \"workflowId\"?: \"string\"\n}\n\nRègles :\n- Si l'utilisateur discute -> \"mode\": \"chat\", mets une réponse dans \"reply\".\n- Si l'utilisateur demande un NOUVEAU workflow :\n  - \"mode\": \"create_workflow\"\n  - décris le workflow dans \"workflowPlan\".\n  - Si le workflow est simple et linéaire, tu peux utiliser \"steps\".\n  - Pour des workflows plus avancés (if, branches, etc.), utilise \"nodes\" + \"connections\".\n- Si l'utilisateur veut MODIFIER un workflow existant (par exemple en donnant son identifiant) :\n  - \"mode\": \"update_workflow\"\n  - mets l'identifiant dans \"workflowId\".\n  - décris la version à jour du workflow dans \"workflowPlan\" (comme pour create_workflow).\n- Si l'utilisateur veut SUPPRIMER un workflow existant :\n  - \"mode\": \"delete_workflow\"\n  - mets l'identifiant dans \"workflowId\".\n\nIMPORTANT :\n- Ne JAMAIS utiliser de Markdown, ni de ``` ``` autour de ta réponse.\n- Ne JAMAIS ajouter de texte avant ou après l'objet JSON.\n- Ne pas renvoyer plusieurs objets JSON, mais UN SEUL.\n- La réponse finale doit être STRICTEMENT du JSON brut.\n",
+          "enableStreaming": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        240,
+        784
+      ],
+      "id": "1f32ee4d-d007-45bf-997a-5246b26e8288",
+      "name": "AI Agent2",
+      "notesInFlow": false,
+      "alwaysOutputData": false,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\n/**\n * Utils\n */\n\n// Optionnel, si tu veux t'en servir plus tard\nfunction slugify(name) {\n\treturn name.toLowerCase().replace(/[^a-z0-9]+/g, \"-\");\n}\n\n// Nettoyage du texte de l'IA pour enlever les ```json``` & co\nfunction extractJson(raw) {\n\tif (!raw || typeof raw !== \"string\") return raw;\n\tlet txt = raw.trim();\n\n\t// Enlever les fences ```...```\n\tif (txt.startsWith(\"```\")) {\n\t\ttxt = txt.replace(/^```[a-zA-Z]*\\n?/, \"\").replace(/```$/, \"\").trim();\n\t}\n\n\t// Garder uniquement le premier bloc {...}\n\tconst firstBrace = txt.indexOf(\"{\");\n\tconst lastBrace = txt.lastIndexOf(\"}\");\n\tif (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {\n\t\ttxt = txt.slice(firstBrace, lastBrace + 1);\n\t}\n\n\treturn txt;\n}\n\n// Map d'alias -> nodeType complet\nfunction resolveNodeType(nodeType) {\n\tif (!nodeType || typeof nodeType !== \"string\") {\n\t\treturn \"n8n-nodes-base.noOp\";\n\t}\n\n\t// Si c'est déjà un type complet (core ou community), on le laisse tel quel\n\tif (nodeType.startsWith(\"n8n-nodes-\")) return nodeType;\n\tif (nodeType.startsWith(\"@\")) return nodeType; // ex: @n8n/..., @company/...\n\n\t// Sinon on applique la logique \"alias\"\n\tconst aliases = {\n\t\twebhook: \"n8n-nodes-base.webhook\",\n\t\thttp: \"n8n-nodes-base.httpRequest\",\n\t\thttpRequest: \"n8n-nodes-base.httpRequest\",\n\t\tset: \"n8n-nodes-base.set\",\n\t\tif: \"n8n-nodes-base.if\",\n\t\trespondText: \"n8n-nodes-base.respondToWebhook\",\n\t\trespondToWebhook: \"n8n-nodes-base.respondToWebhook\",\n\n\t\t// AI / Langchain\n\t\taiAgent: \"@n8n/n8n-nodes-langchain.agent\",\n\t};\n\n\tif (aliases[nodeType]) return aliases[nodeType];\n\n\t// Si ça ressemble à \"package.node\", on le laisse tel quel\n\tif (nodeType.includes(\".\")) return nodeType;\n\n\t// Fallback générique\n\treturn `n8n-nodes-base.${nodeType}`;\n}\n\n// Génère un nom unique pour chaque node\nfunction makeUniqueName(baseName, usedNames) {\n\tlet name = baseName || \"Node\";\n\tlet suffix = 2;\n\n\twhile (usedNames.has(name)) {\n\t\tname = `${baseName || \"Node\"}_${suffix}`;\n\t\tsuffix += 1;\n\t}\n\tusedNames.add(name);\n\treturn name;\n}\n\n// Builder générique depuis nodes + connections\nfunction buildFromNodes(plan) {\n\tconst workflowName = plan.name || \"Generated workflow\";\n\n\tconst nodes = [];\n\tconst idToName = {};\n\tconst connections = {};\n\tconst usedNames = new Set();\n\n\tconst nodePlans = plan.nodes || [];\n\n\tnodePlans.forEach((step, index) => {\n\t\tconst baseName =\n\t\t\tstep.label || step.id || step.nodeType || `Node_${index + 1}`;\n\n\t\tconst name = makeUniqueName(baseName, usedNames);\n\t\tconst type = resolveNodeType(step.nodeType);\n\t\tconst typeVersion = step.typeVersion ?? 1;\n\t\tconst pos = step.position || {};\n\t\tconst x = pos.x ?? (260 + index * 260);\n\t\tconst y = pos.y ?? 300;\n\n\t\tconst node = {\n\t\t\tname,\n\t\t\ttype,\n\t\t\ttypeVersion,\n\t\t\tposition: [x, y],\n\t\t\tparameters: step.params || {},\n\t\t};\n\n\t\tnodes.push(node);\n\t\t// on mappe l'id (ou le nom) vers le \"name\" réel du node\n\t\tidToName[step.id || baseName || name] = name;\n\t});\n\n\t// Construire l'objet connections\n\t(plan.connections || []).forEach((conn) => {\n\t\tconst fromName = idToName[conn.from];\n\t\tconst toName = idToName[conn.to];\n\t\tif (!fromName || !toName) return;\n\n\t\tconst outIndex = conn.outputIndex ?? 0;\n\t\tconst inIndex = conn.inputIndex ?? 0;\n\n\t\tif (!connections[fromName]) {\n\t\t\tconnections[fromName] = { main: [] };\n\t\t}\n\t\twhile (connections[fromName].main.length <= outIndex) {\n\t\t\tconnections[fromName].main.push([]);\n\t\t}\n\n\t\tconnections[fromName].main[outIndex].push({\n\t\t\tnode: toName,\n\t\t\ttype: \"main\",\n\t\t\tindex: inIndex,\n\t\t});\n\t});\n\n\treturn {\n\t\tname: workflowName,\n\t\tnodes,\n\t\tconnections,\n\t\tsettings: {},\n\t};\n}\n\n// Fallback : si l'IA donne seulement \"steps\" (workflow linéaire)\nfunction buildFromSteps(plan) {\n\tconst steps = plan.steps || [];\n\tconst nodesPlan = steps.map((s, i) => ({\n\t\tid: s.id || `step_${i + 1}`,\n\t\tnodeType: s.type,\n\t\tparams: s.params,\n\t}));\n\n\tconst connectionsPlan = [];\n\tfor (let i = 0; i < nodesPlan.length - 1; i++) {\n\t\tconnectionsPlan.push({\n\t\t\tfrom: nodesPlan[i].id,\n\t\t\tto: nodesPlan[i + 1].id,\n\t\t\toutputIndex: 0,\n\t\t\tinputIndex: 0,\n\t\t});\n\t}\n\n\treturn buildFromNodes({\n\t\tname: plan.name,\n\t\tnodes: nodesPlan,\n\t\tconnections: connectionsPlan,\n\t});\n}\n\n/**\n * Main\n */\nreturn items.map((item) => {\n\tconst raw = item.json.output; // champ qui contient la réponse du LLM\n\tconst cleaned = extractJson(raw);\n\n\tlet data;\n\n\t// 1) Parsing JSON robuste\n\ttry {\n\t\tdata = JSON.parse(cleaned);\n\t} catch (e) {\n\t\t// Si ce n'est pas du JSON valide, on repasse en mode chat \"brut\"\n\t\tdata = {\n\t\t\tmode: \"chat\",\n\t\t\treply: raw,\n\t\t\t_llmParseError: e.message,\n\t\t};\n\t}\n\n\t// On force quelques valeurs par défaut\n\tif (!data.mode) {\n\t\tdata.mode = \"chat\";\n\t}\n\tif (typeof data.reply !== \"string\") {\n\t\tdata.reply = \"\";\n\t}\n\n\t// 2) CREATE & UPDATE → on génère un objet workflow n8n\n\tif (\n\t\t(data.mode === \"create_workflow\" || data.mode === \"update_workflow\") &&\n\t\tdata.workflowPlan\n\t) {\n\t\tconst plan = data.workflowPlan;\n\n\t\tlet workflow;\n\t\tif (plan.nodes && Array.isArray(plan.nodes) && plan.nodes.length > 0) {\n\t\t\tworkflow = buildFromNodes(plan);\n\t\t} else if (plan.steps && Array.isArray(plan.steps) && plan.steps.length > 0) {\n\t\t\tworkflow = buildFromSteps(plan);\n\t\t}\n\n\t\tif (workflow) {\n\t\t\t// ⚠️ Ne PAS mettre d'id dans le body pour l'update\n\t\t\tdata.workflow = workflow;\n\t\t} else {\n\t\t\t// Pas de plan exploitable → on repasse en chat\n\t\t\tdata.mode = \"chat\";\n\t\t\tdata.reply =\n\t\t\t\tdata.reply ||\n\t\t\t\t\"Je n'ai pas réussi à construire le workflow à partir de ton plan.\";\n\t\t}\n\t}\n\n\treturn { json: data };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        528,
+        784
+      ],
+      "id": "601db00b-9868-456a-b669-f49d9452befe",
+      "name": "Parse LLM JSON4",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "model": "meta-llama/llama-4-maverick",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        240,
+        976
+      ],
+      "id": "2e06aae5-10c8-4f3c-98e6-c6d58a745b96",
+      "name": "OpenRouter Chat Model6",
+      "credentials": {
+        "openRouterApi": {
+          "id": "bxqfUURgxrbf9ST0",
+          "name": "OpenRouter account 2"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "model": "meta-llama/llama-4-maverick",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        -96,
+        960
+      ],
+      "id": "ccdf8afc-0a55-4e99-9921-dbdf7953ca43",
+      "name": "OpenRouter Chat Model7",
+      "credentials": {
+        "openRouterApi": {
+          "id": "bxqfUURgxrbf9ST0",
+          "name": "OpenRouter account 2"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "Vous êtes un agent spécialisé dans la modification de workflow",
+        "options": {
+          "systemMessage": "=Tu es un Prompt Engineer expert en ingénierie système et en architecture des workflows n8n.\nTa mission est de reformuler la demande utilisateur lorsque celui-ci souhaite MODIFIER un workflow existant, en produisant une description technique complète, précise et exploitable.\n\nLa demande utilisateur est ici :\n{{ $('When chat message received').item.json.chatInput }}\n\nPour accomplir cette mission, tu dois répondre point par point au questionnaire suivant, puis fusionner toutes tes réponses en un texte unique et final, clair et technique.\n\n🔎 QUESTIONNAIRE INTERNE (TU DOIS Y RÉPONDRE AVANT DE PRODUIRE LE TEXTE FINAL)\n1️⃣ Quel est le workflow concerné ?\n\nIdentifie le nom exact du workflow que l'utilisateur veut modifier.\n\n2️⃣ Quel est le besoin réel exprimé concernant la modification ?\n\nDécris précisément ce que l'utilisateur veut changer, ajouter, supprimer ou reconfigurer.\n\n3️⃣ Quels sont les objectifs de la modification ?\n\nAnalyse ce que cette modification doit permettre d’obtenir fonctionnellement.\n\n4️⃣ Quels éléments du workflow EXISTANT sont impliqués ?\n\nExplique :\n\nquels nœuds existants doivent être modifiés,\n\nquels nœuds doivent être conservés,\n\nquels nœuds doivent être supprimés,\n\nquels nouveaux nœuds doivent être ajoutés.\n\n5️⃣ Quelles modifications exactes doivent être appliquées ?\n\nPour chaque nœud impliqué, préciser :\n\nle nœud à modifier,\n\nles paramètres à changer,\n\nles paramètres à ajouter ou retirer,\n\nla logique modifiée.\n\n6️⃣ Quels nouveaux nœuds doivent être créés ?\n\nPour chaque nouveau nœud, préciser :\n\nson type exact n8n (ex : n8n-nodes-base.httpRequest, n8n-nodes-base.set, etc.)\n\nsa configuration complète,\n\nson rôle dans la modification.\n\n7️⃣ Quelles connexions doivent être créées, modifiées ou supprimées ?\n\nPour chaque connexion :\n\nindique le nœud source → le nœud cible,\n\noutputIndex et inputIndex,\n\nexplique pourquoi la connexion doit être modifiée ou conservée.\n\n8️⃣ Quel est le nouveau flux logique du workflow après modification ?\n\nDécris étape par étape :\n\nl’ordre d’exécution après modification,\n\nle cheminement des données,\n\ncomment la modification s’intègre dans le workflow existant.\n\n🧩 INSTRUCTION FINALE\n\nAprès avoir répondu à toutes les questions, fusionne toutes tes réponses pour produire un texte final unique, sous forme d’une spécification technique détaillée, comprenant :\n\nune reformulation claire de la demande,\n\nla liste des modifications à appliquer,\n\nla liste des nœuds concernés (ajoutés, modifiés, supprimés),\n\nla configuration des nœuds modifiés ou nouveaux,\n\nles connexions à créer, modifier ou supprimer,\n\nle flux final du workflow après modification.\n\nCe texte doit être directement exploitable par un agent développeur n8n chargé d’appliquer la modification.\n\n⚠️ RÈGLES STRICTES\n\nTu ne renvoies pas les réponses intermédiaires du questionnaire.\n\nTu renvoies uniquement la reformulation technique finale.\n\nTu ne dois jamais inventer de besoins — seulement approfondir ce que l’utilisateur exprime, de façon cohérente.\n\nAucune utilisation de Markdown, aucun code, aucun décor : tu produis du texte technique clair.\n\nLa reformulation doit être générale, compatible avec tous les types de workflows (API, Gmail, Webhook, Cron, DB, logique conditionnelle, fichiers, branches, etc.).",
+          "enableStreaming": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -112,
+        816
+      ],
+      "id": "9104cb25-d245-423f-8b12-ad6660d0e93b",
+      "name": "update agent conceptor",
+      "notesInFlow": false,
+      "alwaysOutputData": false,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "model": "meta-llama/llama-4-maverick",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        -944,
+        3328
+      ],
+      "id": "71e932fa-0ce1-4363-b660-667af733d270",
+      "name": "OpenRouter Chat Model15",
+      "credentials": {
+        "openRouterApi": {
+          "id": "bxqfUURgxrbf9ST0",
+          "name": "OpenRouter account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "meta-llama/llama-4-maverick",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        -720,
+        4064
+      ],
+      "id": "b9b08689-a40e-42e3-b8fe-e0392703c418",
+      "name": "OpenRouter Chat Model workflow2",
+      "credentials": {
+        "openRouterApi": {
+          "id": "bxqfUURgxrbf9ST0",
+          "name": "OpenRouter account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "meta-llama/llama-4-maverick",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        -272,
+        4048
+      ],
+      "id": "4ba5f4d4-82b8-4218-bfef-ac52e437e4b2",
+      "name": "OpenRouter Chat Model16",
+      "credentials": {
+        "openRouterApi": {
+          "id": "bxqfUURgxrbf9ST0",
+          "name": "OpenRouter account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:5678/api/v1/workflows",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-N8N-API-KEY",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0ZmZiYzM2My03OGNhLTQ5MGUtYTA4Ny03YTMxODM4ZTE2MzciLCJpc3MiOiJuOG4iLCJhdWQiOiJwdWJsaWMtYXBpIiwiaWF0IjoxNzY1MTA3MzcyfQ.A8vSro068RX1kPvfw-hileulw7TxOKONxDEew8rMGAs"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "name",
+              "value": "={{ $json.workflow.name }}"
+            },
+            {
+              "name": "nodes",
+              "value": "={{ $json.workflow.nodes }}"
+            },
+            {
+              "name": "connections",
+              "value": "={{ $json.workflow.connections }}"
+            },
+            {
+              "name": "settings",
+              "value": "={{ $json.workflow.settings ?? {} }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        400,
+        3936
+      ],
+      "id": "c9eae433-17ca-4bf9-82f5-1fc8aa6dc134",
+      "name": "Create Workflow via API2"
+    },
+    {
+      "parameters": {
+        "model": "meta-llama/llama-4-maverick",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        -912,
+        6912
+      ],
+      "id": "d8509521-4273-451e-a8dc-47ca65217bf6",
+      "name": "OpenRouter Chat Model17",
+      "credentials": {
+        "openRouterApi": {
+          "id": "bxqfUURgxrbf9ST0",
+          "name": "OpenRouter account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "meta-llama/llama-4-maverick",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        -784,
+        5584
+      ],
+      "id": "60850497-4471-4ab7-b5f8-8874fd2a4271",
+      "name": "OpenRouter Chat Model18",
+      "credentials": {
+        "openRouterApi": {
+          "id": "bxqfUURgxrbf9ST0",
+          "name": "OpenRouter account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "meta-llama/llama-4-maverick",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        5328
+      ],
+      "id": "5b923767-1689-4240-9e20-d04b089da511",
+      "name": "OpenRouter Chat Model19",
+      "credentials": {
+        "openRouterApi": {
+          "id": "bxqfUURgxrbf9ST0",
+          "name": "OpenRouter account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "meta-llama/llama-4-maverick",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        -2064,
+        4832
+      ],
+      "id": "5f891b9d-a7ee-4d0c-a8ab-35643ad86be4",
+      "name": "OpenRouter Chat Model for classification4",
+      "credentials": {
+        "openRouterApi": {
+          "id": "fStlHR6sBoj8t5Vm",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "meta-llama/llama-4-maverick",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        656,
+        4096
+      ],
+      "id": "06f323fe-8eec-407d-a90f-8d6388240c35",
+      "name": "OpenRouter Chat Model21",
+      "credentials": {
+        "openRouterApi": {
+          "id": "bxqfUURgxrbf9ST0",
+          "name": "OpenRouter account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\n/**\n * Utils\n */\nfunction slugify(name) {\n  return name.toLowerCase().replace(/[^a-z0-9]+/g, '-');\n}\n\n// Nettoyage du texte de l'IA pour enlever les ```json``` & co\nfunction extractJson(raw) {\n  if (!raw || typeof raw !== 'string') return raw;\n  let txt = raw.trim();\n\n  if (txt.startsWith('```')) {\n    txt = txt.replace(/^```[a-zA-Z]*\\n?/, '').replace(/```$/, '').trim();\n  }\n\n  const firstBrace = txt.indexOf('{');\n  const lastBrace = txt.lastIndexOf('}');\n  if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {\n    txt = txt.slice(firstBrace, lastBrace + 1);\n  }\n\n  return txt;\n}\n\n// Map d'alias -> nodeType complet\nfunction resolveNodeType(nodeType) {\n  if (!nodeType) return 'n8n-nodes-base.noOp';\n  if (nodeType.startsWith('n8n-nodes-')) return nodeType;\n  // alias simple\n  return `n8n-nodes-base.${nodeType}`;\n}\n\n// Builder générique depuis nodes + connections\nfunction buildFromNodes(plan) {\n  const workflowName = plan.name || 'Generated workflow';\n\n  const nodes = [];\n  const idToName = {};\n  const connections = {};\n\n  const nodePlans = plan.nodes || [];\n\n  nodePlans.forEach((step, index) => {\n    const name = step.label || step.id || step.nodeType || `Node_${index + 1}`;\n    const type = resolveNodeType(step.nodeType);\n    const typeVersion = step.typeVersion ?? 1;\n    const pos = step.position || {};\n    const x = pos.x ?? (260 + index * 260);\n    const y = pos.y ?? 300;\n\n    const node = {\n      name,\n      type,\n      typeVersion,\n      position: [x, y],\n      parameters: step.params || {},\n    };\n\n    nodes.push(node);\n    idToName[step.id || name] = name;\n  });\n\n  // Construire l'objet connections\n  (plan.connections || []).forEach((conn) => {\n    const fromName = idToName[conn.from];\n    const toName = idToName[conn.to];\n    if (!fromName || !toName) return;\n\n    const outIndex = conn.outputIndex ?? 0;\n    const inIndex = conn.inputIndex ?? 0;\n\n    if (!connections[fromName]) {\n      connections[fromName] = { main: [] };\n    }\n    while (connections[fromName].main.length <= outIndex) {\n      connections[fromName].main.push([]);\n    }\n\n    connections[fromName].main[outIndex].push({\n      node: toName,\n      type: 'main',\n      index: inIndex,\n    });\n  });\n\n  return {\n    name: workflowName,\n    nodes,\n    connections,\n    settings: {},\n  };\n}\n\n// Fallback : si l'IA donne seulement \"steps\" (workflow linéaire)\nfunction buildFromSteps(plan) {\n  const steps = plan.steps || [];\n  const nodesPlan = steps.map((s, i) => ({\n    id: s.id || `step_${i + 1}`,\n    nodeType: s.type,\n    params: s.params,\n  }));\n\n  const connectionsPlan = [];\n  for (let i = 0; i < nodesPlan.length - 1; i++) {\n    connectionsPlan.push({\n      from: nodesPlan[i].id,\n      to: nodesPlan[i + 1].id,\n      outputIndex: 0,\n      inputIndex: 0,\n    });\n  }\n\n  return buildFromNodes({\n    name: plan.name,\n    nodes: nodesPlan,\n    connections: connectionsPlan,\n  });\n}\n\n// Main\nreturn items.map((item) => {\n  const raw = item.json.output;\n  const cleaned = extractJson(raw);\n\n  let data;\n  try {\n    data = JSON.parse(cleaned);\n  } catch (e) {\n    data = {\n      mode: 'chat',\n      reply: raw,\n    };\n  }\n\n  if (data.mode === 'create_workflow' && data.workflowPlan) {\n    const plan = data.workflowPlan;\n\n    let workflow;\n    if (plan.nodes) {\n  // Même s'il n'y a pas de connections, buildFromNodes gère plan.connections || []\n  workflow = buildFromNodes(plan);\n} else if (plan.steps) {\n  workflow = buildFromSteps(plan);\n}\n\n    if (workflow) {\n      data.workflow = workflow;\n    }\n  }\n\n  return { json: data };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -560,
+        6752
+      ],
+      "id": "558cccad-928d-4254-8173-b6c915879738",
+      "name": "Parse LLM JSON delete1"
+    },
+    {
+      "parameters": {
+        "method": "DELETE",
+        "url": "=http://localhost:5678/api/v1/workflows/{{ $json.reply }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-N8N-API-KEY",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0ZmZiYzM2My03OGNhLTQ5MGUtYTA4Ny03YTMxODM4ZTE2MzciLCJpc3MiOiJuOG4iLCJhdWQiOiJwdWJsaWMtYXBpIiwiaWF0IjoxNzY1MTA3MzcyfQ.A8vSro068RX1kPvfw-hileulw7TxOKONxDEew8rMGAs"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -288,
+        6752
+      ],
+      "id": "3a7cc7bb-72f3-405b-8251-323295c3a600",
+      "name": "HTTP Request delete1"
+    },
+    {
+      "parameters": {
+        "model": "meta-llama/llama-4-maverick",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        2352,
+        5376
+      ],
+      "id": "baa27957-dc2f-4541-8620-090f872af750",
+      "name": "OpenRouter Chat Model22",
+      "credentials": {
+        "openRouterApi": {
+          "id": "bxqfUURgxrbf9ST0",
+          "name": "OpenRouter account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "meta-llama/llama-4-maverick",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        80,
+        6928
+      ],
+      "id": "8403f71f-c4f2-4a47-9484-ebe15e8e44fe",
+      "name": "OpenRouter Chat Model23",
+      "credentials": {
+        "openRouterApi": {
+          "id": "bxqfUURgxrbf9ST0",
+          "name": "OpenRouter account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        320,
+        5184
+      ],
+      "id": "283559d7-098e-48a4-ab40-5e49c2baded2",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "model": "meta-llama/llama-4-maverick",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        -384,
+        5216
+      ],
+      "id": "b8582dc4-d448-4c63-b635-d8adcb06b277",
+      "name": "OpenRouter Chat Model workflow3",
+      "credentials": {
+        "openRouterApi": {
+          "id": "bxqfUURgxrbf9ST0",
+          "name": "OpenRouter account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=http://localhost:5678/api/v1/workflows/{{ $('update agent identifier').item.json.output }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-N8N-API-KEY",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0ZmZiYzM2My03OGNhLTQ5MGUtYTA4Ny03YTMxODM4ZTE2MzciLCJpc3MiOiJuOG4iLCJhdWQiOiJwdWJsaWMtYXBpIiwiaWF0IjoxNzY1MTA3MzcyfQ.A8vSro068RX1kPvfw-hileulw7TxOKONxDEew8rMGAs"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -384,
+        5408
+      ],
+      "id": "775cd679-4d5c-4332-b4d8-fc3a4eb61338",
+      "name": "get existing workflow"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\nfunction safeStringify(obj) {\n  try {\n    return JSON.stringify(obj, null, 2);\n  } catch (e) {\n    return String(obj);\n  }\n}\n\nreturn items.map(item => {\n  const workflow = item.json;\n\n  const text = `\nWORKFLOW METADATA\n-----------------\nID: ${workflow.id}\nName: ${workflow.name}\nActive: ${workflow.active}\nCreated at: ${workflow.createdAt}\nUpdated at: ${workflow.updatedAt}\n\nSETTINGS\n--------\n${safeStringify(workflow.settings)}\n\nNODES\n-----\n${workflow.nodes.map((node, index) => `\n[Node ${index + 1}]\nName: ${node.name}\nType: ${node.type}\nTypeVersion: ${node.typeVersion}\nDisabled: ${node.disabled ?? false}\nPosition: ${node.position}\nParameters:\n${safeStringify(node.parameters)}\nCredentials:\n${safeStringify(node.credentials)}\n`).join('\\n')}\n\nCONNECTIONS\n-----------\n${safeStringify(workflow.connections)}\n\nSTATIC DATA\n-----------\n${safeStringify(workflow.staticData)}\n`.trim();\n\n  return {\n    json: {\n      workflowId: workflow.id,\n      workflowName: workflow.name,\n      workflowText: text\n    }\n  };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -144,
+        5424
+      ],
+      "id": "b199c013-4d1d-4baa-bd4c-3fbc23ce759b",
+      "name": "Text Serializer"
+    },
+    {
+      "parameters": {
+        "model": "meta-llama/llama-4-maverick",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        864,
+        5328
+      ],
+      "id": "45efa8d5-5578-4a11-9dc2-946eba92269c",
+      "name": "OpenRouter Chat Model24",
+      "credentials": {
+        "openRouterApi": {
+          "id": "bxqfUURgxrbf9ST0",
+          "name": "OpenRouter account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "chat",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -2624,
+        4672
+      ],
+      "id": "ac85b546-61f0-4c9b-bd8e-8caf78ff2be9",
+      "name": "User request from UI",
+      "webhookId": "a832e77d-c580-49c6-b1ed-b612a35c0446"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.body.message }}",
+        "options": {
+          "systemMessage": "=You are a classification agent. Your role is to examine the user’s message and determine which of the following categories best matches their intention:\nHere is the user message:\n{{ $json.body.message }}\n\nguide → when the user is looking for help, explanations, or advice on using n8n.\n\ncreate → when the user wants to create a new n8n workflow.\n\nmodify → when they want to modify, improve, or adapt an existing workflow.\n\ndelete → when they want to delete a workflow or part of a workflow.\n\nFor the three categories related to workflow manipulation (create, modify, delete), consider that the user’s intention is part of a group called “workflow system”, defined as: all actions where the user seeks to build, transform, or remove structural elements of an n8n workflow, including block descriptions, flow logic, functional requirements, and modifications to apply.\nThis paragraph is only meant to guide your reasoning and must never be returned.\n\nAlways answer only with one of the following words:\nguide — create — modify — delete\n\nNo other text is allowed."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -2064,
+        4672
+      ],
+      "id": "032809ec-6d60-4cb6-8385-dbdcde20bb30",
+      "name": "Ai mission classifier"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an agent specialized in n8n assistance you help the user :{{ $('User request from UI').item.json.body.message }}",
+        "options": {
+          "systemMessage": "=You are an agent specialized in n8n assistance. Your role is to help the user understand and use n8n effectively, and to respond in the same language as the user. Provide step-by-step guidance, clear explanations, and references to the official documentation when necessary. Use the available tools (for example, HTTP Request to query the docs) when it is useful. Help me do this. here is the message of user:\n\n\"\"{{ $('User request from UI').item.json.body.message }}\"\"\n\nIf the request is not about n8n, say that you were not programmed for that.\n\nAlways respond in the same language as the user."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -944,
+        3168
+      ],
+      "id": "7f4b3e45-fdc2-4693-8cfc-5d79b726139d",
+      "name": "Guide Agent"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a Prompt Engineer assistant specialized in systems engineering and in designing n8n workflows\n{{ $('User request from UI').item.json.body.message }}",
+        "options": {
+          "systemMessage": "=You are a Prompt Engineer assistant specialized in systems engineering and in designing n8n workflows.\nYour mission is to answer an internal questionnaire based on the user message, then merge all your answers to produce ONE complete technical reformulation, precisely describing how to build the n8n workflow requested by the user.\n\n{{ $('User request from UI').item.json.body.message }}\n\nYou must answer each question of the following questionnaire, then combine all the answers into a single final text, extremely detailed, without ever inventing requirements that were not explicitly expressed.\n\n🔎 INTERNAL QUESTIONNAIRE (YOU MUST ANSWER IT POINT BY POINT)\n1️⃣ What is the real need expressed by the user?\n\nAnalyze in one clear sentence what the user actually wants to obtain.\n\n2️⃣ What are the objectives of the workflow?\n\nProvide a precise and exhaustive list of the expected functional objectives.\n\n3️⃣ What are the inputs of the workflow?\n\nEvents, triggers, received data, context, etc.\n\n4️⃣ What are the outputs of the workflow?\n\nFinal actions, data sent, operations performed.\n\n5️⃣ Which n8n nodes are required to implement this workflow?\n\nFor each node, you must specify:\n\nits exact type (e.g.: n8n-nodes-base.httpRequest)\n\nits role,\n\nits essential configuration (important parameters),\n\nwhy it is required.\n\n6️⃣ What are the exact connections between the nodes?\n\nFor each link, specify:\n\nsource node → target node\n\noutputIndex\n\ninputIndex\n\njustification of the logical flow.\n\n7️⃣ What is the complete logical flow of the workflow?\n\nDescribe the step-by-step sequence from the trigger to the final action.\n\n🧩 FINAL INSTRUCTION\n\nAfter answering the questionnaire, you must combine all the answers to produce a final technical reformulation, in text format, containing:\n\na synthetic but detailed explanation of the workflow,\n\nthe complete list of required nodes,\n\nthe essential configuration of each node,\n\nthe connections between the nodes,\n\nthe overall logical flow.\n\nNo JSON. No Markdown. No code.\n\nYou must produce a smooth, technical text such as:\n\n“To implement this workflow, you need to use a Cron node configured as follows…, then an HTTP Request node configured to…, then connect X to Y via… etc.”\n\n⚠️ STRICT RULES\n\nNever invent requirements.\n\nYou may elaborate or make explicit what the user implies.\n\nYou must be extremely precise, systematic, and technical.\n\nYou must remain 100% general-purpose, able to reformulate any type of workflow, simple or complex."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -656,
+        3856
+      ],
+      "id": "579d1b54-4094-4583-8f93-29592979b4b1",
+      "name": "workflow conceptor Creator"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an assistant for building n8n workflows from the user request:\n{{ $json.output }}",
+        "options": {
+          "systemMessage": "=You are an assistant for building n8n workflows from the user request:\n{{ $json.output }}\n\nYou MUST ALWAYS reply with a single JSON object and nothing else (no Markdown, no ```).\n\nGeneral format:\n\n{\n\"mode\": \"chat\" | \"create_workflow\",\n\"reply\": \"string\",\n\"workflowPlan\"?: {\n\"name\": \"string\",\n\"nodes\"?: [\n{\n\"id\": \"string\",\n\"label\"?: \"string\",\n\"nodeType\": \"string\", // e.g.: \"webhook\", \"httpRequest\", \"if\", \"set\",\n// or \"n8n-nodes-base.webhook\"\n\"typeVersion\"?: number,\n\"params\"?: { ... }, // will go into node.parameters\n\"position\"?: { \"x\": number, \"y\": number }\n}\n],\n\"connections\"?: [\n{\n\"from\": \"string\", // id of the source node\n\"to\": \"string\", // id of the target node\n\"outputIndex\"?: number, // output of \"from\" (default 0)\n\"inputIndex\"?: number // input of \"to\" (default 0)\n}\n],\n\n// simplified linear format (optional, for simple workflows):\n\"steps\"?: [\n  {\n    \"id\": \"string\",\n    \"type\": \"webhook\" | \"httpRequest\" | \"respondText\" | \"set\" | \"if\" | ...,\n    \"params\"?: { ... }\n  }\n]\n\n\n}\n}\n\nRules:\n\nIf the user is just having a conversation -> \"mode\": \"chat\", put a reply in \"reply\".\n\nIf the user is requesting a workflow:\n\nuse \"mode\": \"create_workflow\"\n\ndescribe the workflow in \"workflowPlan\".\n\nIf the workflow is simple and linear, you can use \"steps\".\n\nFor more advanced workflows (if, branches, etc.), use \"nodes\" + \"connections\".\n\nNo Markdown, no json, no text outside of the JSON object.\n\nIMPORTANT:\n\nNEVER use Markdown, or around your answer.\n\nNEVER add text before or after the JSON object.\n\nDo not return multiple JSON objects, only ONE.\n\nThe final answer must be STRICTLY raw JSON.",
+          "enableStreaming": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -256,
+        3872
+      ],
+      "id": "1e522b6f-0e58-4a4c-b559-cdc25d500653",
+      "name": "developeur agent Creator",
+      "notesInFlow": false,
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\n/**\n * Utils\n */\nfunction slugify(name) {\n  return name.toLowerCase().replace(/[^a-z0-9]+/g, '-');\n}\n\n// Nettoyage du texte de l'IA pour enlever les ```json``` & co\nfunction extractJson(raw) {\n  if (!raw || typeof raw !== 'string') return raw;\n  let txt = raw.trim();\n\n  if (txt.startsWith('```')) {\n    txt = txt.replace(/^```[a-zA-Z]*\\n?/, '').replace(/```$/, '').trim();\n  }\n\n  const firstBrace = txt.indexOf('{');\n  const lastBrace = txt.lastIndexOf('}');\n  if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {\n    txt = txt.slice(firstBrace, lastBrace + 1);\n  }\n\n  return txt;\n}\n\n// Map d'alias -> nodeType complet\nfunction resolveNodeType(nodeType) {\n  if (!nodeType) return 'n8n-nodes-base.noOp';\n  if (nodeType.startsWith('n8n-nodes-')) return nodeType;\n  // alias simple\n  return `n8n-nodes-base.${nodeType}`;\n}\n\n// Builder générique depuis nodes + connections\nfunction buildFromNodes(plan) {\n  const workflowName = plan.name || 'Generated workflow';\n\n  const nodes = [];\n  const idToName = {};\n  const connections = {};\n\n  const nodePlans = plan.nodes || [];\n\n  nodePlans.forEach((step, index) => {\n    const name = step.label || step.id || step.nodeType || `Node_${index + 1}`;\n    const type = resolveNodeType(step.nodeType);\n    const typeVersion = step.typeVersion ?? 1;\n    const pos = step.position || {};\n    const x = pos.x ?? (260 + index * 260);\n    const y = pos.y ?? 300;\n\n    const node = {\n      name,\n      type,\n      typeVersion,\n      position: [x, y],\n      parameters: step.params || {},\n    };\n\n    nodes.push(node);\n    idToName[step.id || name] = name;\n  });\n\n  // Construire l'objet connections\n  (plan.connections || []).forEach((conn) => {\n    const fromName = idToName[conn.from];\n    const toName = idToName[conn.to];\n    if (!fromName || !toName) return;\n\n    const outIndex = conn.outputIndex ?? 0;\n    const inIndex = conn.inputIndex ?? 0;\n\n    if (!connections[fromName]) {\n      connections[fromName] = { main: [] };\n    }\n    while (connections[fromName].main.length <= outIndex) {\n      connections[fromName].main.push([]);\n    }\n\n    connections[fromName].main[outIndex].push({\n      node: toName,\n      type: 'main',\n      index: inIndex,\n    });\n  });\n\n  return {\n    name: workflowName,\n    nodes,\n    connections,\n    settings: {},\n  };\n}\n\n// Fallback : si l'IA donne seulement \"steps\" (workflow linéaire)\nfunction buildFromSteps(plan) {\n  const steps = plan.steps || [];\n  const nodesPlan = steps.map((s, i) => ({\n    id: s.id || `step_${i + 1}`,\n    nodeType: s.type,\n    params: s.params,\n  }));\n\n  const connectionsPlan = [];\n  for (let i = 0; i < nodesPlan.length - 1; i++) {\n    connectionsPlan.push({\n      from: nodesPlan[i].id,\n      to: nodesPlan[i + 1].id,\n      outputIndex: 0,\n      inputIndex: 0,\n    });\n  }\n\n  return buildFromNodes({\n    name: plan.name,\n    nodes: nodesPlan,\n    connections: connectionsPlan,\n  });\n}\n\n// Main\nreturn items.map((item) => {\n  const raw = item.json.output;\n  const cleaned = extractJson(raw);\n\n  let data;\n  try {\n    data = JSON.parse(cleaned);\n  } catch (e) {\n    data = {\n      mode: 'chat',\n      reply: raw,\n    };\n  }\n\n  if (data.mode === 'create_workflow' && data.workflowPlan) {\n    const plan = data.workflowPlan;\n\n    let workflow;\n    if (plan.nodes && plan.connections) {\n      workflow = buildFromNodes(plan);\n    } else if (plan.steps) {\n      workflow = buildFromSteps(plan);\n    }\n\n    if (workflow) {\n      data.workflow = workflow;\n    }\n  }\n\n  return { json: data };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        96,
+        3936
+      ],
+      "id": "905b9502-ea0e-4b4a-8ce2-22c4cef25a91",
+      "name": "Parse LLM JSON creator"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "You are an agent specialized in generating reports about n8n workflows.\nYour mission is to produce only a textual report — without code, without JSON, without Markdown, without tags, and without any additional text outside the report.\n\nYou must generate the following report:\n\nThe report must contain:\nThe name of the created workflow:\n{{ $json.nodes[0].name }}\n\nA clear and concise summary explaining what the workflow does and how it works, based on:\n{{ $('developeur agent Creator').item.json.output }}\n\nA statement confirming that the workflow has been saved under the ID:\n{{ $json.id }}\n\n⚠️ Mandatory rules:\nYou must return only the report, nothing else.\nAbsolute prohibition of including: JSON, Markdown, code, tags, intermediate analysis, preambles, or conclusions.\nThe report must be plain text, clear, readable, and professional.\nNever modify, invent, or reinterpret the provided values.\nNever answer in multiple sections: only the final report.\n\nAlways respond in the same language as the user. His language is the language that is use here : \"\"{{ $('User request from UI').item.json.body.message }}\"\" transalte before to answer",
+        "options": {
+          "systemMessage": "=You are an agent specialized in generating reports about n8n workflows.\nYour mission is to produce only a textual report — without code, without JSON, without Markdown, without tags, and without any additional text outside the report.\n\nYou must generate the following report:\n\nThe report must contain:\nThe name of the created workflow:\n{{ $json.nodes[0].name }}\n\nA clear and concise summary explaining what the workflow does and how it works, based on:\n{{ $('developeur agent Creator').item.json.output }}\n\nA statement confirming that the workflow has been saved under the ID:\n{{ $json.id }}\n\n⚠️ Mandatory rules:\nYou must return only the report, nothing else.\nAbsolute prohibition of including: JSON, Markdown, code, tags, intermediate analysis, preambles, or conclusions.\nThe report must be plain text, clear, readable, and professional.\nNever modify, invent, or reinterpret the provided values.\nNever answer in multiple sections: only the final report.\n\nAlways respond in the same language as the user. His language is the language that is use here : \"\"{{ $('User request from UI').item.json.body.message }}\"\" transalte before to answer",
+          "enableStreaming": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        656,
+        3936
+      ],
+      "id": "5ac8c929-6484-4c10-aeec-f4e451ed4154",
+      "name": "Reporting Agent for creator",
+      "notesInFlow": false,
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a Prompt Engineer assistant specialized in systems engineering and in designing n8n workflows\n{{ $('User request from UI').item.json.body.message }}",
+        "options": {
+          "systemMessage": "=You are a Prompt Engineer assistant specialized in systems engineering and in designing n8n workflows.\nYour mission is to answer an internal questionnaire based on the user message, then merge all your answers to produce ONE complete technical reformulation, precisely describing how to build the n8n workflow requested by the user.\n\n{{ $('User request from UI').item.json.body.message }}\n\nYou must answer each question of the following questionnaire, then combine all the answers into a single final text, extremely detailed, without ever inventing requirements that were not explicitly expressed.\n\n🔎 INTERNAL QUESTIONNAIRE (YOU MUST ANSWER IT POINT BY POINT)\n1️⃣ What is the real need expressed by the user?\n\nAnalyze in one clear sentence what the user actually wants to obtain.\n\n2️⃣ What are the objectives of the workflow?\n\nProvide a precise and exhaustive list of the expected functional objectives.\n\n3️⃣ What are the inputs of the workflow?\n\nEvents, triggers, received data, context, etc.\n\n4️⃣ What are the outputs of the workflow?\n\nFinal actions, data sent, operations performed.\n\n5️⃣ Which n8n nodes are required to implement this workflow?\n\nFor each node, you must specify:\n\nits exact type (e.g.: n8n-nodes-base.httpRequest)\n\nits role,\n\nits essential configuration (important parameters),\n\nwhy it is required.\n\n6️⃣ What are the exact connections between the nodes?\n\nFor each link, specify:\n\nsource node → target node\n\noutputIndex\n\ninputIndex\n\njustification of the logical flow.\n\n7️⃣ What is the complete logical flow of the workflow?\n\nDescribe the step-by-step sequence from the trigger to the final action.\n\n🧩 FINAL INSTRUCTION\n\nAfter answering the questionnaire, you must combine all the answers to produce a final technical reformulation, in text format, containing:\n\na synthetic but detailed explanation of the workflow,\n\nthe complete list of required nodes,\n\nthe essential configuration of each node,\n\nthe connections between the nodes,\n\nthe overall logical flow.\n\nNo JSON. No Markdown. No code.\n\nYou must produce a smooth, technical text such as:\n\n“To implement this workflow, you need to use a Cron node configured as follows…, then an HTTP Request node configured to…, then connect X to Y via… etc.”\n\n⚠️ STRICT RULES\n\nNever invent requirements.\n\nYou may elaborate or make explicit what the user implies.\n\nYou must be extremely precise, systematic, and technical.\n\nYou must remain 100% general-purpose, able to reformulate any type of workflow, simple or complex."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -352,
+        5056
+      ],
+      "id": "450a51f0-8cf0-4603-8e1b-72365d4171c8",
+      "name": "demand interpreter"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('User request from UI').item.json.body.message }}",
+        "options": {
+          "systemMessage": "=You are an agent specialized in identifying workflows for modification.\nFrom the user message, extract only the workflow identifier:\n\n{{ $('User request from UI').item.json.body.message }}\n\nYour output must contain only the workflow ID, with absolutely nothing else — no spaces, no text, no symbols, no formatting. Only the raw ID.",
+          "enableStreaming": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -784,
+        5408
+      ],
+      "id": "611d925d-d3cb-41c4-b4ce-8174cdae2dcd",
+      "name": "update agent identifier",
+      "notesInFlow": false,
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a Prompt Engineer assistant specialized in systems engineering and in designing n8n workflows\nwhat is exting\n{{ $json.workflowText }}",
+        "options": {
+          "systemMessage": "=You are a Prompt Engineer assistant specialized in systems engineering and in designing n8n workflows.\nYour mission is to answer an internal questionnaire based on the user message, then merge all your answers to produce ONE complete technical reformulation, precisely describing how to build the n8n workflow requested by the user.\nWhat is exting\n{{ $json.workflowText }}\nwhat user want:\n{{ $json.output }}\nYou must answer each question of the following questionnaire, then combine all the answers into a single final text, extremely detailed, without ever inventing requirements that were not explicitly expressed.\n\n🔎 INTERNAL QUESTIONNAIRE (YOU MUST ANSWER IT POINT BY POINT)\n1️⃣ What is the real need expressed by the user?\n\nAnalyze in one clear sentence what the user actually wants to obtain.\n\n2️⃣ What are the objectives of the workflow?\n\nProvide a precise and exhaustive list of the expected functional objectives.\n\n3️⃣ What are the inputs of the workflow?\n\nEvents, triggers, received data, context, etc.\n\n4️⃣ What are the outputs of the workflow?\n\nFinal actions, data sent, operations performed.\n\n5️⃣ Which n8n nodes are required to implement this workflow?\n\nFor each node, you must specify:\n\nits exact type (e.g.: n8n-nodes-base.httpRequest)\n\nits role,\n\nits essential configuration (important parameters),\n\nwhy it is required.\n\n6️⃣ What are the exact connections between the nodes?\n\nFor each link, specify:\n\nsource node → target node\n\noutputIndex\n\ninputIndex\n\njustification of the logical flow.\n\n7️⃣ What is the complete logical flow of the workflow?\n\nDescribe the step-by-step sequence from the trigger to the final action.\n\n🧩 FINAL INSTRUCTION\n\nAfter answering the questionnaire, you must combine all the answers to produce a final technical reformulation, in text format, containing:\n\na synthetic but detailed explanation of the workflow,\n\nthe complete list of required nodes,\n\nthe essential configuration of each node,\n\nthe connections between the nodes,\n\nthe overall logical flow.\n\nNo JSON. No Markdown. No code.\n\nYou must produce a smooth, technical text such as:\n\n“To implement this workflow, you need to use a Cron node configured as follows…, then an HTTP Request node configured to…, then connect X to Y via… etc.”\n\n⚠️ STRICT RULES\n\nNever invent requirements.\n\nYou may elaborate or make explicit what the user implies.\n\nYou must be extremely precise, systematic, and technical.\n\nYou must remain 100% general-purpose, able to reformulate any type of workflow, simple or complex."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        864,
+        5184
+      ],
+      "id": "b264611e-39ef-4dc4-af46-f7fa7a39df1f",
+      "name": "Update prompter"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.output }}",
+        "options": {
+          "systemMessage": "You are an assistant for building and modifying n8n workflows.\n\nYou MUST ALWAYS respond with a single JSON object and nothing else (no Markdown, no ```).\n\nGeneral format:\n\n{\n\"mode\": \"chat\" | \"create_workflow\" | \"update_workflow\" | \"delete_workflow\",\n\"reply\": \"string\",\n\n// Describes a new workflow to create OR the updated version of a workflow (create/update)\n\"workflowPlan\"?: {\n\"name\": \"string\",\n\n\"nodes\"?: [\n  {\n    \"id\": \"string\",\n    \"label\"?: \"string\",\n    \"nodeType\": \"string\",          // e.g.: \"webhook\", \"httpRequest\", \"if\", \"set\",\n                                   // or \"n8n-nodes-base.webhook\"\n    \"typeVersion\"?: number,\n    \"params\"?: { ... },            // will go into node.parameters\n    \"position\"?: { \"x\": number, \"y\": number }\n  }\n],\n\n\"connections\"?: [\n  {\n    \"from\": \"string\",              // id of the source node\n    \"to\": \"string\",                // id of the target node\n    \"outputIndex\"?: number,        // output of \"from\" (default 0)\n    \"inputIndex\"?: number          // input of \"to\" (default 0)\n  }\n],\n\n// simplified linear format (optional, for simple workflows):\n\"steps\"?: [\n  {\n    \"id\": \"string\",\n    \"type\": \"webhook\" | \"httpRequest\" | \"respondText\" | \"set\" | \"if\" | ...,\n    \"params\"?: { ... }\n  }\n]\n\n\n},\n\n// Used when the user wants to DELETE or MODIFY an existing workflow\n// (mode = \"delete_workflow\" or \"update_workflow\")\n\"workflowId\"?: \"string\"\n}\n\nRules:\n\nIf the user is just chatting → set \"mode\": \"chat\" and put a response in \"reply\".\n\nIf the user requests a NEW workflow:\n\nset \"mode\": \"create_workflow\"\n\ndescribe the workflow in \"workflowPlan\".\n\nIf the workflow is simple and linear, you may use \"steps\".\n\nFor more advanced workflows (if statements, branching, etc.), use \"nodes\" + \"connections\".\n\nIf the user wants to MODIFY an existing workflow (for example by providing its identifier):\n\nset \"mode\": \"update_workflow\"\n\nput the identifier in \"workflowId\".\n\ndescribe the updated version of the workflow in \"workflowPlan\" (same structure as create_workflow).\n\nIf the user wants to DELETE an existing workflow:\n\nset \"mode\": \"delete_workflow\"\n\nput the identifier in \"workflowId\".\n\nIMPORTANT:\n\nNEVER use Markdown or ``` around your response.\n\nNEVER add any text before or after the JSON object.\n\nDo not return multiple JSON objects — only ONE.\n\nThe final answer must be STRICTLY raw JSON.",
+          "enableStreaming": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        1200,
+        5184
+      ],
+      "id": "fe522e71-d465-42d0-872b-b483305dba7a",
+      "name": "Update developer",
+      "notesInFlow": false,
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\n/**\n * Utils\n */\n\n// Optionnel, si tu veux t'en servir plus tard\nfunction slugify(name) {\n\treturn name.toLowerCase().replace(/[^a-z0-9]+/g, \"-\");\n}\n\n// Nettoyage du texte de l'IA pour enlever les ```json``` & co\nfunction extractJson(raw) {\n\tif (!raw || typeof raw !== \"string\") return raw;\n\tlet txt = raw.trim();\n\n\t// Enlever les fences ```...```\n\tif (txt.startsWith(\"```\")) {\n\t\ttxt = txt.replace(/^```[a-zA-Z]*\\n?/, \"\").replace(/```$/, \"\").trim();\n\t}\n\n\t// Garder uniquement le premier bloc {...}\n\tconst firstBrace = txt.indexOf(\"{\");\n\tconst lastBrace = txt.lastIndexOf(\"}\");\n\tif (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {\n\t\ttxt = txt.slice(firstBrace, lastBrace + 1);\n\t}\n\n\treturn txt;\n}\n\n// Map d'alias -> nodeType complet\nfunction resolveNodeType(nodeType) {\n\tif (!nodeType || typeof nodeType !== \"string\") {\n\t\treturn \"n8n-nodes-base.noOp\";\n\t}\n\n\t// Si c'est déjà un type complet (core ou community), on le laisse tel quel\n\tif (nodeType.startsWith(\"n8n-nodes-\")) return nodeType;\n\tif (nodeType.startsWith(\"@\")) return nodeType; // ex: @n8n/..., @company/...\n\n\t// Sinon on applique la logique \"alias\"\n\tconst aliases = {\n\t\twebhook: \"n8n-nodes-base.webhook\",\n\t\thttp: \"n8n-nodes-base.httpRequest\",\n\t\thttpRequest: \"n8n-nodes-base.httpRequest\",\n\t\tset: \"n8n-nodes-base.set\",\n\t\tif: \"n8n-nodes-base.if\",\n\t\trespondText: \"n8n-nodes-base.respondToWebhook\",\n\t\trespondToWebhook: \"n8n-nodes-base.respondToWebhook\",\n\n\t\t// AI / Langchain\n\t\taiAgent: \"@n8n/n8n-nodes-langchain.agent\",\n\t};\n\n\tif (aliases[nodeType]) return aliases[nodeType];\n\n\t// Si ça ressemble à \"package.node\", on le laisse tel quel\n\tif (nodeType.includes(\".\")) return nodeType;\n\n\t// Fallback générique\n\treturn `n8n-nodes-base.${nodeType}`;\n}\n\n// Génère un nom unique pour chaque node\nfunction makeUniqueName(baseName, usedNames) {\n\tlet name = baseName || \"Node\";\n\tlet suffix = 2;\n\n\twhile (usedNames.has(name)) {\n\t\tname = `${baseName || \"Node\"}_${suffix}`;\n\t\tsuffix += 1;\n\t}\n\tusedNames.add(name);\n\treturn name;\n}\n\n// Builder générique depuis nodes + connections\nfunction buildFromNodes(plan) {\n\tconst workflowName = plan.name || \"Generated workflow\";\n\n\tconst nodes = [];\n\tconst idToName = {};\n\tconst connections = {};\n\tconst usedNames = new Set();\n\n\tconst nodePlans = plan.nodes || [];\n\n\tnodePlans.forEach((step, index) => {\n\t\tconst baseName =\n\t\t\tstep.label || step.id || step.nodeType || `Node_${index + 1}`;\n\n\t\tconst name = makeUniqueName(baseName, usedNames);\n\t\tconst type = resolveNodeType(step.nodeType);\n\t\tconst typeVersion = step.typeVersion ?? 1;\n\t\tconst pos = step.position || {};\n\t\tconst x = pos.x ?? (260 + index * 260);\n\t\tconst y = pos.y ?? 300;\n\n\t\tconst node = {\n\t\t\tname,\n\t\t\ttype,\n\t\t\ttypeVersion,\n\t\t\tposition: [x, y],\n\t\t\tparameters: step.params || {},\n\t\t};\n\n\t\tnodes.push(node);\n\t\t// on mappe l'id (ou le nom) vers le \"name\" réel du node\n\t\tidToName[step.id || baseName || name] = name;\n\t});\n\n\t// Construire l'objet connections\n\t(plan.connections || []).forEach((conn) => {\n\t\tconst fromName = idToName[conn.from];\n\t\tconst toName = idToName[conn.to];\n\t\tif (!fromName || !toName) return;\n\n\t\tconst outIndex = conn.outputIndex ?? 0;\n\t\tconst inIndex = conn.inputIndex ?? 0;\n\n\t\tif (!connections[fromName]) {\n\t\t\tconnections[fromName] = { main: [] };\n\t\t}\n\t\twhile (connections[fromName].main.length <= outIndex) {\n\t\t\tconnections[fromName].main.push([]);\n\t\t}\n\n\t\tconnections[fromName].main[outIndex].push({\n\t\t\tnode: toName,\n\t\t\ttype: \"main\",\n\t\t\tindex: inIndex,\n\t\t});\n\t});\n\n\treturn {\n\t\tname: workflowName,\n\t\tnodes,\n\t\tconnections,\n\t\tsettings: {},\n\t};\n}\n\n// Fallback : si l'IA donne seulement \"steps\" (workflow linéaire)\nfunction buildFromSteps(plan) {\n\tconst steps = plan.steps || [];\n\tconst nodesPlan = steps.map((s, i) => ({\n\t\tid: s.id || `step_${i + 1}`,\n\t\tnodeType: s.type,\n\t\tparams: s.params,\n\t}));\n\n\tconst connectionsPlan = [];\n\tfor (let i = 0; i < nodesPlan.length - 1; i++) {\n\t\tconnectionsPlan.push({\n\t\t\tfrom: nodesPlan[i].id,\n\t\t\tto: nodesPlan[i + 1].id,\n\t\t\toutputIndex: 0,\n\t\t\tinputIndex: 0,\n\t\t});\n\t}\n\n\treturn buildFromNodes({\n\t\tname: plan.name,\n\t\tnodes: nodesPlan,\n\t\tconnections: connectionsPlan,\n\t});\n}\n\n/**\n * Main\n */\nreturn items.map((item) => {\n\tconst raw = item.json.output; // champ qui contient la réponse du LLM\n\tconst cleaned = extractJson(raw);\n\n\tlet data;\n\n\t// 1) Parsing JSON robuste\n\ttry {\n\t\tdata = JSON.parse(cleaned);\n\t} catch (e) {\n\t\t// Si ce n'est pas du JSON valide, on repasse en mode chat \"brut\"\n\t\tdata = {\n\t\t\tmode: \"chat\",\n\t\t\treply: raw,\n\t\t\t_llmParseError: e.message,\n\t\t};\n\t}\n\n\t// On force quelques valeurs par défaut\n\tif (!data.mode) {\n\t\tdata.mode = \"chat\";\n\t}\n\tif (typeof data.reply !== \"string\") {\n\t\tdata.reply = \"\";\n\t}\n\n\t// 2) CREATE & UPDATE → on génère un objet workflow n8n\n\tif (\n\t\t(data.mode === \"create_workflow\" || data.mode === \"update_workflow\") &&\n\t\tdata.workflowPlan\n\t) {\n\t\tconst plan = data.workflowPlan;\n\n\t\tlet workflow;\n\t\tif (plan.nodes && Array.isArray(plan.nodes) && plan.nodes.length > 0) {\n\t\t\tworkflow = buildFromNodes(plan);\n\t\t} else if (plan.steps && Array.isArray(plan.steps) && plan.steps.length > 0) {\n\t\t\tworkflow = buildFromSteps(plan);\n\t\t}\n\n\t\tif (workflow) {\n\t\t\t// ⚠️ Ne PAS mettre d'id dans le body pour l'update\n\t\t\tdata.workflow = workflow;\n\t\t} else {\n\t\t\t// Pas de plan exploitable → on repasse en chat\n\t\t\tdata.mode = \"chat\";\n\t\t\tdata.reply =\n\t\t\t\tdata.reply ||\n\t\t\t\t\"Je n'ai pas réussi à construire le workflow à partir de ton plan.\";\n\t\t}\n\t}\n\n\treturn { json: data };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1504,
+        5184
+      ],
+      "id": "101fa6d2-5c7d-44e6-9977-cd06affe8022",
+      "name": "Parse LLM JSON update"
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=http://localhost:5678/api/v1/workflows/{{ $json.workflowId }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-N8N-API-KEY",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0ZmZiYzM2My03OGNhLTQ5MGUtYTA4Ny03YTMxODM4ZTE2MzciLCJpc3MiOiJuOG4iLCJhdWQiOiJwdWJsaWMtYXBpIiwiaWF0IjoxNzY1MTA3MzcyfQ.A8vSro068RX1kPvfw-hileulw7TxOKONxDEew8rMGAs"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.workflow }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1840,
+        5184
+      ],
+      "id": "c6392fcf-34e7-4672-9193-28e9301da20c",
+      "name": "Update Workflow saver"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "You are an agent specialized in generating reports about n8n workflows.",
+        "options": {
+          "systemMessage": "=You are an agent specialized in generating reports about n8n workflows.\nYour mission is to produce only a textual report, with no code, no JSON, no Markdown, no tags, and no additional text outside the report.\n\nYou must generate the following report:\n\nThe name of the modified workflow:\n{{ $json.name }}\n\nA clear and concise summary explaining what the workflow does NOW, after modification, and how it works, based on:\n\n{{ $('demand interpreter').item.json.output }}\nA statement confirming that the modified workflow is saved under the ID:\n{{ $json.id }}\n\n⚠️ Mandatory rules\nYou must return only the report, nothing else.\nIt is strictly forbidden to include: JSON, Markdown, code, tags, intermediate analysis, preambles, or conclusions.\nThe report must be plain text, clear, readable, and professional.\nNever modify, invent, or reinterpret any provided values.\nNever answer in multiple sections: only the final report.",
+          "enableStreaming": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        2352,
+        5216
+      ],
+      "id": "68c996ee-0130-47fe-904c-f5cbe5ca039c",
+      "name": "Reporting agent for update",
+      "notesInFlow": false,
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        2688,
+        5216
+      ],
+      "id": "b43733ae-8c48-47ea-82fe-5c28870592e9",
+      "name": "Respond for update"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        1136,
+        3936
+      ],
+      "id": "bcb457d1-c901-447d-9e93-883f4cd6401d",
+      "name": "Respond  for creation"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an agent specialized in deleting workflows.\nFrom the user message, identify the workflow ID:",
+        "options": {
+          "systemMessage": "=You are an agent specialized in deleting workflows.\nFrom the user message, identify the workflow ID:\n\n{{ $('User request from UI').item.json.body.message }}\n\nYour output must contain only the workflow ID and nothing else — no spaces, no additional text, nothing at all."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -912,
+        6752
+      ],
+      "id": "9b004b71-4245-4c6a-8b64-de9c5b00c07f",
+      "name": "delete agent identifier"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "You are an agent specialized in generating reports about n8n workflows.\nYour mission is to produce only a textual report, without code, JSON, Markdown, tags, or any additional text outside the report.",
+        "options": {
+          "systemMessage": "=You are an agent specialized in generating reports about n8n workflows.\nYour mission is to produce only a textual report, without code, JSON, Markdown, tags, or any additional text outside the report.\n\nYou must generate the following report:\n\nThe report must contain:\nThe name of the deleted workflow:\n{{ $json.nodes[0].name }}\n\nThe ID of the deleted workflow:\n{{ $json.id }}\n\nA statement confirming that the workflow has been successfully deleted.\n\n⚠️ Mandatory rules\nYou must return only the report, nothing else.\nIt is strictly forbidden to include: JSON, Markdown, code, tags, intermediate analysis, preambles, or conclusions.\nThe report must be plain text, clear, readable, and professional.\nNever modify, invent, or reinterpret the supplied values.\nNever answer in multiple sections: only the final report.",
+          "enableStreaming": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        64,
+        6752
+      ],
+      "id": "79de7452-d18f-44e3-bc45-abdd4fbb30a7",
+      "name": "Reporting agent for delete",
+      "notesInFlow": false,
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        592,
+        6752
+      ],
+      "id": "566d005e-bbb7-44d3-bb94-82cc66f8a6dd",
+      "name": "Respond for delete"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        -576,
+        3168
+      ],
+      "id": "17e02c50-d889-40d3-a6cf-3fd14d17d05a",
+      "name": "Respond forGUIDE"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.output }}",
+                    "rightValue": "guide",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "c84c8671-0445-499f-be25-cb01d5668fda"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "3a14463f-8f20-4346-9c4f-ffd28b218b6b",
+                    "leftValue": "={{ $json.output }}",
+                    "rightValue": "create",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "1741483d-9a07-4de2-ad20-f1a866bbc844",
+                    "leftValue": "={{ $json.output }}",
+                    "rightValue": "modify",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "4823a82b-24c7-4f6b-ba37-70e6e4c5d23b",
+                    "leftValue": "={{ $json.output }}",
+                    "rightValue": "delete",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        -1776,
+        4640
+      ],
+      "id": "ed4b1e9c-652d-4f0d-afe3-fb38a9676608",
+      "name": "Switch1"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $execution.id }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -160,
+        4176
+      ],
+      "id": "9e54e2c2-ae19-45ab-b982-475c162b4c57",
+      "name": "Simple Memory5"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $execution.id }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -240,
+        5296
+      ],
+      "id": "00515f24-36dc-4ba6-b576-74d060396b37",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $execution.id }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -848,
+        3440
+      ],
+      "id": "ad62d87a-7dbc-4fac-8f14-d6cea8666e8f",
+      "name": "Simple Memory11"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $execution.id }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        768,
+        4208
+      ],
+      "id": "5add8672-89b9-44eb-b3e5-1ed36d8abda2",
+      "name": "Simple Memory10"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $execution.id }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -528,
+        4160
+      ],
+      "id": "644c8427-83b0-4b2a-b0c2-aae845128ad3",
+      "name": "Simple Memory6"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $execution.id }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -672,
+        5712
+      ],
+      "id": "1eefeff9-c5d8-4f4a-947a-12f12f848afe",
+      "name": "Simple Memory12"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $execution.id }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        976,
+        5504
+      ],
+      "id": "245e9c52-d92c-4d43-aeaa-ac3d47c5cc72",
+      "name": "Simple Memory13"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $execution.id }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        1296,
+        5456
+      ],
+      "id": "88a474a4-5c13-434b-aa6b-8ce8d3eebab1",
+      "name": "Simple Memory7"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $execution.id }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        2496,
+        5568
+      ],
+      "id": "f02ea278-bc2e-4015-a240-90bb2b016f3a",
+      "name": "Simple Memory14"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $execution.id }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -784,
+        7024
+      ],
+      "id": "714b81ff-9f7b-4c04-a678-628e5f3bb4b3",
+      "name": "Simple Memory8"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $execution.id }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        208,
+        7072
+      ],
+      "id": "d501b0fc-1ba5-420d-97fa-344975d9e032",
+      "name": "Simple Memory9"
+    },
+    {
+      "parameters": {
+        "content": "OpenRouter Chat Model15\n\nPurpose\nProvides the OpenRouter LLM used by the Guide Agent to answer questions about how to use n8n.\n\nExpected Input\nNone directly (used as ai_languageModel).\n\nExpected Output\nLLM responses consumed internally by the Guide Agent.\n\nDebug Tips\n\nIf the Guide Agent gives empty or low-quality answers, verify:\n\nOpenRouter credentials\n\nModel availability (meta-llama/llama-4-maverick)\n\nAuthentication or quota errors usually come from the OpenRouter account",
+        "height": 512,
+        "width": 384
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1680,
+        3216
+      ],
+      "id": "d723e18f-b590-47c1-9882-120b7772ab3f",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "Guide Agent\n\nPurpose\nExplains how to use n8n.\nResponds in the user’s language.\n\nInput\n\nUser message\n\nOutput\n\noutput: text response\n\nDebug Tips\n\nWrong language:\n\nVerify frontend sends original message\n\nRefuses valid questions:\n\nCheck system message constraints",
+        "height": 464,
+        "width": 496
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1168,
+        2656
+      ],
+      "id": "161d6344-4930-4227-a79c-2c9236204493",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "Respond forGUIDE\n\nPurpose\nReturns guide response to the UI.\n\nDebug Tips\n\nEmpty UI response:\n\nNode not executed\n\n$json.output missing",
+        "height": 304,
+        "width": 208
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -624,
+        2848
+      ],
+      "id": "198343cc-ba05-44b1-ad93-3ba9e4497459",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "Ai mission classifier\n\nPurpose\nClassifies the user message into exactly one intent:\n\nguide\n\ncreate\n\nmodify\n\ndelete\n\nInput\n\n{{$json.body.message}}\n\nOutput\n\noutput: single lowercase word\n\nDebug Tips\n\nOutput must be exact (no spaces, no newlines)\n\nIf Switch does not route:\n\nInspect raw output (enable execution data)\n\nAdd trimming logic if needed",
+        "height": 592,
+        "width": 512,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2256,
+        4944
+      ],
+      "id": "5c2db89f-d633-4191-8707-c4d6ddde8176",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "Switch1\n\nPurpose\nRoutes execution based on classifier output.\n\nRouting\n\nOutput 0 → guide\n\nOutput 1 → create\n\nOutput 2 → modify\n\nOutput 3 → delete\n\nDebug Tips\n\nCase-sensitive comparison\n\nIf multiple branches fire:\n\nClassifier output is corrupted\n\nIf no branch fires:\n\nOutput value does not match any rule",
+        "height": 576,
+        "width": 272,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1904,
+        4048
+      ],
+      "id": "fad34266-f8cd-40b4-8eb6-dcc8b6df3ba4",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "workflow conceptor Creator\n\nPurpose\nTransforms user request into a detailed technical specification (text only).\n\nOutput\n\noutput: long technical description\n\nDebug Tips\n\nIf requirements are invented:\n\nTighten system rules\n\nIf description is too vague:\n\nUser request is underspecified",
+        "height": 384,
+        "width": 368,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -704,
+        3440
+      ],
+      "id": "00033f5f-2673-4eb3-861f-9da73a2770a1",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "developeur agent Creator\n\nPurpose\nGenerates STRICT raw JSON for workflow creation.\n\nOutput\n\nJSON only (no Markdown, no text)\n\nDebug Tips\n\nIf downstream parsing fails:\n\nInspect raw LLM output\n\nEnsure no ``` or explanations are returned",
+        "height": 384,
+        "width": 288,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -320,
+        3456
+      ],
+      "id": "a1e2b658-d053-41d2-9629-711f0b7c66f9",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "Parse LLM JSON creator (Code)\n\nPurpose\nParses LLM JSON and builds a valid n8n workflow object.\n\nProduces\n\nworkflow.name\n\nworkflow.nodes\n\nworkflow.connections\n\nworkflow.settings\n\nDebug Tips\n\nmode: chat → JSON parsing failed\n\nInvalid node types:\n\nAlias mapping issue\n\nBroken graph:\n\nConnections malformed",
+        "height": 592,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        16,
+        3328
+      ],
+      "id": "eb1ec0da-bf71-4eeb-8692-1d6506d2e396",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "Create Workflow via API2\n\nPurpose\nCreates the workflow via n8n Public API.\n\nEndpoint\n\nPOST /api/v1/workflows\n\n\nDebug Tips\n\n401 / 403: API key invalid or permissions missing\n\n400: invalid workflow structure\n\nDocker users:\n\nlocalhost may not resolve correctly",
+        "height": 400,
+        "width": 304,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        304,
+        3504
+      ],
+      "id": "3f6721f7-bde3-4f64-8858-df10fc9e8836",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "content": "Reporting Agent for creator\n\nPurpose\nGenerates a human-readable creation report.\n\nDebug Tips\n\nMissing workflow name or ID:\n\nAPI response schema mismatch\n\nInspect HTTP node output",
+        "height": 320,
+        "width": 304,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        640,
+        3600
+      ],
+      "id": "55e1e594-17af-4882-80dc-292ebb0459f6",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "content": "Respond for creation\n\nPurpose\nReturns creation report to the UI.",
+        "height": 112,
+        "width": 304,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1056,
+        3776
+      ],
+      "id": "e5b16230-53ce-4334-acd0-d9e986d744d7",
+      "name": "Sticky Note11"
+    },
+    {
+      "parameters": {
+        "content": "update agent identifier\n\nPurpose\nExtracts only the workflow ID.\n\nOutput\n\nRaw ID string\n\nDebug Tips\n\nAny extra character breaks API calls\n\nIf ID is wrong:\n\nUser did not provide a valid reference",
+        "height": 400,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -816,
+        5824
+      ],
+      "id": "86fab8b4-b2a8-43f1-9e62-7732cb5e9f25",
+      "name": "Sticky Note12"
+    },
+    {
+      "parameters": {
+        "content": "get existing workflow\n\nPurpose\nFetches current workflow definition.\n\nEndpoint\n\nGET /api/v1/workflows/{id}\n\n\nDebug Tips\n\n404: invalid workflow ID\n\n401 / 403: API access issue",
+        "height": 320,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        5600
+      ],
+      "id": "922de190-588e-4d10-8ab3-da5ba769da73",
+      "name": "Sticky Note13"
+    },
+    {
+      "parameters": {
+        "content": "Text Serializer (Code)\n\nPurpose\nConverts workflow JSON into readable text for LLM context.\n\nOutput\n\nworkflowText\n\nDebug Tips\n\nVery large workflows:\n\nRisk of token overflow\n\nConsider summarizing nodes",
+        "height": 400,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -176,
+        5568
+      ],
+      "id": "7228d0eb-1cc3-46c2-a01a-d25bcbe4c07d",
+      "name": "Sticky Note14"
+    },
+    {
+      "parameters": {
+        "content": "Merge\n\nPurpose\nCombines:\n\nExisting workflow description\n\nUser modification intent\n\nDebug Tips\n\nBoth inputs must emit exactly one item\n\nIf merge fails:\n\nOne branch didn’t execute",
+        "height": 384,
+        "width": 368,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        240,
+        5344
+      ],
+      "id": "2106297c-a445-46c4-add4-49341cbd3ca0",
+      "name": "Sticky Note15"
+    },
+    {
+      "parameters": {
+        "content": "Webhook & Entry Point\nUser request from UI (Webhook)\n\nPurpose\nEntry point of the system. Receives messages from the frontend UI.\n\nInput\n\nbody.message: raw user message\n\nOutput\n\nForwards the message to the mission classifier\n\nDebug Tips\n\nIf nothing happens:\n\nCheck webhook URL and HTTP method (POST)\n\nVerify responseMode = responseNode\n\nIf body.message is undefined:\n\nFrontend payload format is incorrect",
+        "height": 608,
+        "width": 432,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -3104,
+        4416
+      ],
+      "id": "39cf7682-96ab-485f-8004-db5ce4ce59e1",
+      "name": "Sticky Note17"
+    },
+    {
+      "parameters": {
+        "content": "demand interpreter\n\nPurpose\nInterprets what the user wants to change.\n\nOutput\n\nStructured modification intent (text)\n\nDebug Tips\n\nIf intent is misunderstood:\n\nUser request ambiguous\n\nImprove frontend guidance",
+        "height": 416,
+        "width": 400,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -432,
+        4592
+      ],
+      "id": "68ed0a2a-1856-4172-b7e3-bc7c106a96ea",
+      "name": "Sticky Note18"
+    },
+    {
+      "parameters": {
+        "content": "Update prompter\n\nPurpose\nProduces a full technical reformulation of the updated workflow.",
+        "width": 256,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        848,
+        4976
+      ],
+      "id": "eab8274e-770e-4ac2-8653-d45643088a3e",
+      "name": "Sticky Note19"
+    },
+    {
+      "parameters": {
+        "content": "Update developer\n\nPurpose\nGenerates STRICT JSON for workflow update.\n\nExpected\n\nmode: update_workflow\n\nworkflowId\n\nworkflowPlan\n\nDebug Tips\n\nMissing workflowId → update will fail\n\nJSON must be raw and valid",
+        "height": 432,
+        "width": 256,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1168,
+        4720
+      ],
+      "id": "3c56d7b6-0cca-4ba9-9baa-19c3e82edf77",
+      "name": "Sticky Note20"
+    },
+    {
+      "parameters": {
+        "content": "Parse LLM JSON update (Code)\n\nPurpose\nBuilds the updated n8n workflow object.\n\nDebug Tips\n\nDuplicate node names:\n\nAuto-handled, but verify visually\n\nBroken UI graph:\n\nConnections malformed",
+        "height": 352,
+        "width": 256,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1440,
+        5328
+      ],
+      "id": "cb0a906c-769b-4a6f-badd-6a389b72e8e4",
+      "name": "Sticky Note21"
+    },
+    {
+      "parameters": {
+        "content": "Update Workflow saver\n\nPurpose\nSaves workflow via API.\n\nEndpoint\n\nPUT /api/v1/workflows/{id}\n\n\nDebug Tips\n\n400: invalid workflow structure\n\nWorkflow updates but UI breaks:\n\nConnections object incorrect",
+        "height": 368,
+        "width": 256,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1760,
+        4800
+      ],
+      "id": "03cea610-8954-405d-955a-01aae36b4a93",
+      "name": "Sticky Note22"
+    },
+    {
+      "parameters": {
+        "content": "Reporting agent for update\n\nPurpose\nProduces post-update report.",
+        "height": 128,
+        "width": 256,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2336,
+        5056
+      ],
+      "id": "3ebc2d35-1e03-4a98-b144-59956bfdb094",
+      "name": "Sticky Note23"
+    },
+    {
+      "parameters": {
+        "content": "Respond for update\n\nPurpose\nReturns update report to UI.",
+        "height": 128,
+        "width": 256,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2624,
+        5072
+      ],
+      "id": "1b5e4fdc-76fb-4cf5-9f76-381203567de4",
+      "name": "Sticky Note24"
+    },
+    {
+      "parameters": {
+        "content": "delete agent identifier\n\nPurpose\nExtracts workflow ID to delete.\n\nDebug Tips\n\nWrong ID = irreversible deletion risk\n\nConsider adding confirmation step",
+        "height": 288,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -912,
+        6448
+      ],
+      "id": "62eb1edc-201c-47f0-87d7-784edc3b553e",
+      "name": "Sticky Note16"
+    },
+    {
+      "parameters": {
+        "content": "Parse LLM JSON delete1\n\nPurpose\nNormalizes delete instruction.\n\nDebug Tips\n\nIf reply contains extra text:\n\nLLM prompt violated",
+        "height": 288,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -640,
+        6448
+      ],
+      "id": "38378437-5b80-4944-af51-841c93d85780",
+      "name": "Sticky Note25"
+    },
+    {
+      "parameters": {
+        "content": "HTTP Request delete1\n\nPurpose\nDeletes workflow via API.\n\nEndpoint\n\nDELETE /api/v1/workflows/{id}\n\n\nDebug Tips\n\n404: workflow already deleted or wrong ID\n\n401 / 403: API key issue",
+        "height": 352,
+        "width": 352,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -384,
+        6928
+      ],
+      "id": "4e92499e-bb6e-4dd7-a241-01f9a8726701",
+      "name": "Sticky Note26"
+    },
+    {
+      "parameters": {
+        "content": "Reporting agent for delete\n\nPurpose\nConfirms deletion.",
+        "height": 96,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        48,
+        6624
+      ],
+      "id": "ac7cd2a0-a2cb-4d3a-97f9-877325f0802a",
+      "name": "Sticky Note27"
+    },
+    {
+      "parameters": {
+        "content": "Respond for delete\n\nPurpose\nReturns deletion confirmation to UI.",
+        "height": 144,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        528,
+        6928
+      ],
+      "id": "26df15c1-169c-4680-a023-842815a29749",
+      "name": "Sticky Note28"
+    },
+    {
+      "parameters": {
+        "content": "7. Memory Nodes (CRITICAL NOTE)\n\nAll Simple Memory* nodes use:\n\nsessionKey = {{$execution.id}}\n\n\nImplication\n\nMemory lasts only for one execution\n\nDebug Tips\n\nFor real conversations:\n\nReplace with stable key (userId, conversationId)\n\nIf agents “forget” context:\n\nThis is expected behavior",
+        "height": 432,
+        "width": 352,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        96,
+        7248
+      ],
+      "id": "a6bb9301-1979-45d7-bd42-5bae3853db3b",
+      "name": "Sticky Note29"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "mission classifier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "mission classifier": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Guide Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guide Agent1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Chat guide",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model for classification": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "mission classifier",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model workflow": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "workflow conceptor",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "developeur agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse LLM JSON1": {
+      "main": [
+        [
+          {
+            "node": "Create Workflow via API1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Workflow via API1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Chat1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Guide Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "workflow conceptor",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "update agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "delete agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "workflow conceptor": {
+      "main": [
+        [
+          {
+            "node": "developeur agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "developeur agent": {
+      "main": [
+        [
+          {
+            "node": "Parse LLM JSON1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Delete Workflow via API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model4": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "delete agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "delete agent": {
+      "main": [
+        [
+          {
+            "node": "Parse LLM JSON3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse LLM JSON3": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model5": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "update agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Workflow1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Chat (update)1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "update agent": {
+      "main": [
+        [
+          {
+            "node": "update agent conceptor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent2": {
+      "main": [
+        [
+          {
+            "node": "Parse LLM JSON4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model6": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse LLM JSON4": {
+      "main": [
+        [
+          {
+            "node": "Update Workflow1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model7": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "update agent conceptor",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "update agent conceptor": {
+      "main": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Chat guide": {
+      "main": [
+        []
+      ]
+    },
+    "OpenRouter Chat Model15": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Guide Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model workflow2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "workflow conceptor Creator",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model16": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "developeur agent Creator",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Workflow via API2": {
+      "main": [
+        [
+          {
+            "node": "Reporting Agent for creator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model17": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "delete agent identifier",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model18": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "update agent identifier",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model19": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Update developer",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model for classification4": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Ai mission classifier",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model21": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Reporting Agent for creator",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse LLM JSON delete1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request delete1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request delete1": {
+      "main": [
+        [
+          {
+            "node": "Reporting agent for delete",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model22": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Reporting agent for update",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model23": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Reporting agent for delete",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model workflow3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "demand interpreter",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Update prompter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get existing workflow": {
+      "main": [
+        [
+          {
+            "node": "Text Serializer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Text Serializer": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model24": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Update prompter",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "User request from UI": {
+      "main": [
+        [
+          {
+            "node": "Ai mission classifier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ai mission classifier": {
+      "main": [
+        [
+          {
+            "node": "Switch1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guide Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond forGUIDE",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "workflow conceptor Creator": {
+      "main": [
+        [
+          {
+            "node": "developeur agent Creator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "developeur agent Creator": {
+      "main": [
+        [
+          {
+            "node": "Parse LLM JSON creator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse LLM JSON creator": {
+      "main": [
+        [
+          {
+            "node": "Create Workflow via API2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reporting Agent for creator": {
+      "main": [
+        [
+          {
+            "node": "Respond  for creation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "demand interpreter": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "update agent identifier": {
+      "main": [
+        [
+          {
+            "node": "get existing workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update prompter": {
+      "main": [
+        [
+          {
+            "node": "Update developer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update developer": {
+      "main": [
+        [
+          {
+            "node": "Parse LLM JSON update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse LLM JSON update": {
+      "main": [
+        [
+          {
+            "node": "Update Workflow saver",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Workflow saver": {
+      "main": [
+        [
+          {
+            "node": "Reporting agent for update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reporting agent for update": {
+      "main": [
+        [
+          {
+            "node": "Respond for update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "delete agent identifier": {
+      "main": [
+        [
+          {
+            "node": "Parse LLM JSON delete1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reporting agent for delete": {
+      "main": [
+        [
+          {
+            "node": "Respond for delete",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch1": {
+      "main": [
+        [
+          {
+            "node": "Guide Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "workflow conceptor Creator",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "update agent identifier",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "demand interpreter",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "delete agent identifier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory5": {
+      "ai_memory": [
+        [
+          {
+            "node": "developeur agent Creator",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "demand interpreter",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory11": {
+      "ai_memory": [
+        [
+          {
+            "node": "Guide Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory10": {
+      "ai_memory": [
+        [
+          {
+            "node": "Reporting Agent for creator",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory6": {
+      "ai_memory": [
+        [
+          {
+            "node": "workflow conceptor Creator",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory12": {
+      "ai_memory": [
+        [
+          {
+            "node": "update agent identifier",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory13": {
+      "ai_memory": [
+        [
+          {
+            "node": "Update prompter",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory7": {
+      "ai_memory": [
+        [
+          {
+            "node": "Update developer",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory14": {
+      "ai_memory": [
+        [
+          {
+            "node": "Reporting agent for update",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory8": {
+      "ai_memory": [
+        [
+          {
+            "node": "delete agent identifier",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory9": {
+      "ai_memory": [
+        [
+          {
+            "node": "Reporting agent for delete",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "05d6006d-6312-47a5-bf10-ba7940d2051a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "295b1aea41f83ffc62792aa2d7d73ff02991ac4607245b42014338713242cda4"
+  },
+  "id": "r4pGtZsXozehPKJ9",
+  "tags": []
+}

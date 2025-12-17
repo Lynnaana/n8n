@@ -1,0 +1,458 @@
+#n8n-status, 
+#file-input,
+#edit-settings {
+  display: none !important
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, Roboto, Helvetica, sans-serif;
+  background-color: #fafafa;
+  color: #333;
+  line-height: 1.5
+}
+
+/* Header */
+
+header {
+  background-color: #fafafa;
+  color: #1e1e1e;
+  padding: 12px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 0px;
+}
+
+.app-logo {
+  height: 32px;
+  width: auto;
+  display: block;
+  object-fit: contain;
+}
+
+header h1 {
+  margin: 0px;
+  display: flex;
+  align-items: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.link-button {
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+/* ===== LAYOUT PRINCIPAL ===== */
+
+.main-container {
+  display: flex;
+  height: calc(100vh - 65px);
+  background-color: #fafafa;
+}
+
+/* ===== Sidebar ===== */
+
+#sidebar {
+  width: 260px;
+  min-width: 260px;
+  background: #fafafa;
+  border-right: 0px;
+  display: flex;
+  flex-direction: column;
+  transition: min-width 0.25s ease, width 0.25s ease;
+}
+
+.sidebar-header {
+  padding: 10px;
+  border-bottom: 0px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#sidebar.hidden {
+  width: 150px;
+  min-width: 0;
+}
+
+#toggle-sidebar-btn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0px 0px 0px 4px;
+}
+
+#toggle-icon {
+  width: 28px;
+  height: 28px;
+  display: block;
+  transition: transform 0.3s ease; 
+}
+
+#new-chat-btn {
+  border: none;
+  background-color: #dcf9ee;
+  color: black;
+  padding: 8px 8px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: bold;
+}
+
+#conversation-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.conversation-item {
+  padding: 8px 15px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  border-bottom: 0px;
+}
+
+.conversation-item:hover {
+  background-color: #f0f0f0;
+}
+
+.conversation-item.active {
+  background-color: #f0f0f0;
+  border-left: 3px solid #dcf9ee;
+  color: black;
+}
+
+.modal-content{
+  padding: 2px 15px;
+}
+
+#conversation-list.hidden, .modal-content.hidden {
+  display: none;
+}
+
+#save-settings{
+  background: #f8f8f8;
+  color: #444;
+  padding: 6px 10px;
+  border: 1px solid #f6f6f6;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+}
+
+#save-settings:hover {
+  background: #f4f4f4;
+  color: #333;
+  border: 1px solid #f3f3f3;
+}
+
+
+/* ===== Chat ===== */
+
+#chat-window:empty::before {
+  content: "Hello, I'm your n8n assistant. I can help you create or modify your automation workflow, just ask me!";
+  display: block;
+  text-align: center;
+  margin-top: 160px;
+  color: #646464;
+  font-size: 1.25rem;
+}
+
+#chat-section {
+  flex-grow: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: #fafafa;
+}
+
+#chat-window {
+  flex: 1;
+  overflow-y: auto;
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 650px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* ===== Messages ===== */
+
+.message {
+  max-width: 80%;
+  margin-bottom: 15px;
+  padding: 12px 18px;
+  border-radius: 20px;
+  font-size: 1rem;
+  word-break: break-word;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  transition: transform 0.2s ease;
+}
+
+.message.user {
+  align-self: flex-end;
+  background-color: #444444;
+  color: #fafafa;
+  border-top-right-radius: 6px;
+  border: 1px solid #343434;
+}
+
+.message.bot {
+  align-self: flex-start;
+  background-color: #f8f8f8;
+  color: #1a1a1a;
+  border-top-left-radius: 6px;
+  border: 1px solid #f6f6f6;
+}
+
+/* Attachments */
+
+.file-attachments {
+  font-size: 0.85rem;
+  margin-top: 10px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* ===== Input Area ===== */
+
+#input-area {
+  width: 90%; 
+  max-width: 700px;
+  margin: 0 auto 20px auto;
+  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 10;
+  
+  box-sizing: border-box;
+  padding: 10px;
+  
+  background: #fff;
+  border: 1px solid #f6f6f6;
+  border-radius: 28px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+#input-area:focus-within {
+    box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+    border-color: #f4f4f4;
+}
+
+#user-input {
+  width: 100%;
+  box-sizing: border-box;
+  resize: none;
+  padding: 8px 10px;
+  font-family: inherit;
+  border: none;
+  background: transparent;
+  font-size: 1rem;
+  outline: none;
+  max-height: 200px;
+}
+
+.input-actions {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 5px 0 5px;
+  box-sizing: border-box;
+}
+
+/* Buttons Styling */
+.file-label, #mic-button {
+  background: #f8f8f8;
+  color: #444;
+  padding: 8px 14px;
+  border: 1px solid #f6f6f6;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.file-label:hover, #mic-button:hover {
+  background: #f5f5f5;
+  color: #333;
+  border: 1px solid #f3f3f3;
+}
+
+#mic-button.recording {
+  background-color: #ef4444;
+  border-color: #e54242;
+  color: white;
+}
+
+#mic-lang {
+  background: #f8f8f8;
+  color: #444;
+  padding: 8px 14px;
+  border: 1px solid #f6f6f6;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+  
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  text-align: center;
+  outline: none;
+}
+
+#mic-lang:hover {
+  background: #f5f5f5;
+  color: #333;
+  border: 1px solid #f3f3f3;
+}
+
+#send-button {
+  margin-left: auto; 
+  
+  background-color: #dcf9ee;
+  color: #111;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+}
+
+#send-button:disabled {
+    background-color: #e5e5e5;
+    color: #999;
+    cursor: not-allowed;
+}
+
+#send-button:hover:not(:disabled) {
+  background-color: #d6f8eb;
+}
+
+/* ===== MODE SOMBRE AUTOMATIQUE ===== */
+@media (prefers-color-scheme: dark) {
+  
+  html, body, .main-container, #chat-section, #sidebar {
+    background-color: #212121;
+    color: #eee;
+  }
+  
+  /* Header */
+  header {
+    background-color: #212121;
+    color: #eee;
+    border-bottom: 1px solid #333;
+  }
+  
+  header .app-logo, #toggle-icon {
+  filter: invert(100%);
+  }
+
+  /* Sidebar items */
+  #new-chat-btn {
+      background-color: #dcf9ee;
+      color: black;
+  }
+  .conversation-item:hover {
+      background-color: #2f2f2f;
+  }
+  .conversation-item.active {
+      background-color: #2f2f2f;
+      color: #eee;
+      border-left: 3px solid #dcf9ee;
+  }
+  #save-settings {
+      background: #2f2f2f;
+      color: #eee;
+      border-color: #343434;
+  }
+  #save-settings:hover {
+      background: #383838;
+      color: #eee;
+      border-color: #3A3A3A;
+  }
+
+  #conversation-list {
+      scrollbar-color: #444 #212121; 
+  }
+
+  #chat-window {
+    scrollbar-color: #444 #212121; 
+  }
+  
+  /* Messages */
+  .message.user {
+    background-color: #3d3d3d;
+    color: #eee;
+    border: 1px solid #3f3f3f;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  }
+  
+  .message.bot {
+    background-color: #232323; 
+    color: #eee;
+    border: 1px solid #262626;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+  }
+  
+  .file-attachments {
+      color: #aaa;
+  }
+
+  #input-area {
+    background-color: #2f2f2f;
+    border-color: #323232;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  }
+  
+  #input-area:focus-within {
+      border-color: #363636;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.45);
+  }
+  
+  #user-input {
+    color: #eee;
+  }
+  
+  .file-label, #mic-button, #mic-lang {
+    background-color: #323232;  
+    color: #ddd;
+    border: 1px solid #363636;
+  }
+  .file-label:hover, #mic-button:hover, #mic-lang:hover {
+      background-color: #363636;
+      color: #eee;
+      border: 1px solid #393939;
+  }
+  
+  .modal .modal-content {
+      background-color: #2f2f2f;
+      color: #eee;
+  }
+}
